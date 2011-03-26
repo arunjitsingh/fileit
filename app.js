@@ -38,11 +38,11 @@ app.get('/', function(req, res){
 	res.redirect("/index.html");
 });
 
-// For all routes ^/browse. See browse.html
+// For all routes `^/browse`. See [browse.js](./browse.html)
 require('./browse')(app);
 
 
-// Only listen on $ node app.js
+// Only listen on `$ node app.js`
 if (!module.parent) {
   app.listen(parseInt(process.argv[2], 10) || 9501);
   console.log("Express server listening on port %d", app.address().port);
