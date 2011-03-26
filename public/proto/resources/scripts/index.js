@@ -4,7 +4,7 @@
 var $APP = $APP || {VERSION:'0.c.2035'};
 $APP.applicationRoot = '/';
 $APP.resources = {};
-$APP.resources['browser'] = 'browser';
+$APP.resources['browser'] = 'browse';
 $APP.user = {home:'users/arunjitsingh'};
 
 $APP.currentSelection = null;
