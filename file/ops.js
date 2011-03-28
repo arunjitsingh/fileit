@@ -144,7 +144,6 @@ FileOperation.prototype.del = function(uri, callback) {
                         if (err) {
                             callback({status:503, error:"Could not delete",
                                 detail:err, where:uri});
-                            console.log(err);
                         } else {
                             callback(null);
                         }
