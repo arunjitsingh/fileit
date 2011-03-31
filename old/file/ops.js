@@ -2,50 +2,52 @@
 var fs = require('fs');
 var path = require('path');
 
-var timestamp = function() {
-    return new(Date).getTime();
-};
-
-var prepare = function(options) {
+// FileOperation constructor. Checks for incorrect invokation
+// (i.e., without `new` keyword). Options must be specified and
+// may be `{}`. `options.root` is not necessary, but is strongly
+// recommended.
+var DEFAULT_ROOT = '/';
+var FileOperation = function(options) {
+    if (!(this instanceof FileOperation)) {
+        return new FileOperation(options);
+    }
+    if (!options) {
+        throw new TypeError("First argument of FileInformation must be object or string");
+    }
+    
+    var self = this;
+    
     var root = (typeof options === 'object')
-                ? options.root || null
+                ? options.root || DEFAULT_ROOT
                 : (typeof options === 'string')
                     ? options
-                    : null;
-    return {
-        root: root,
-        trash: options.trash || null,
-        uriFromPath: function(abspath) {
-            return abspath.replace(path.join(root, '/'), "");
-        }
+                    : DEFAULT_ROOT;
+
+    self.root = function() {
+        return root;
     };
+    // Path verification. This can be through a required option,
+    // say `option.auth` or something. This `auth` is created
+    // per request, maybe based on some session info.
+    /*
+    self.canUpdate = function(abspath) {
+        
+    }
+    */
 };
 
 var DEFAULT_MODE = 0777;
-
-// General information
-// The `options` and `callback` are required. `options` can
-// either be a string representing absolute base path, or `root`,
-// for the uri, or it can be an object containing a `root` 
-// property. This may be extended in the future.
-// This method makes use of only asynchronous methods from `fs`
-
-// Create a directory. equivalent to `mkdir ${root}/${uri}`
-module.exports.mkdir = function(uri, options, callback) {
+FileOperation.prototype.mkdir = function(uri, callback) {
     // Callback pattern: `callback(err)`
     if (typeof callback !== 'function') {
-        throw new TypeError("file#ops: callback needs to be a function");
+        throw new TypeError("FileInformation#info: callback needs to be a function");
     }
     
-    if (!options) {
-        throw new TypeError("file#ops: options cannot be null/undefined");
-    }
-    var self = prepare(options);
-    if (!self.root) {
-        throw new TypeError("file#ops: options.root cannot be null");
-    }
-    
-    var filepath = path.join(self.root, uri);
+    var self = this;
+    var filepath = path.join(self.root(), uri);
+    // `filepath` access verification takes place here...
+    /*  var parent = filepath.substring(0, filepath.lastIndexOf('/')); */
+    /*  if (!self.canUpdate(parent)) //error */
     
     path.exists(filepath, function(exists) {
         if (exists) {
@@ -68,22 +70,20 @@ module.exports.mkdir = function(uri, options, callback) {
 // Renaming a path. `to` is an equivalent id(URI). If the last path
 // component of `uri` contains and extension, it will be added to `to`
 // if it doesn't already exist.
-module.exports.rename = function(uri, to, options, callback) {
+FileOperation.prototype.rename = function(uri, to, callback) {
     // Callback pattern: `callback(err)`
     if (typeof callback !== 'function') {
         throw new TypeError("FileInformation#info: callback needs to be a function");
     }
     
-    if (!options) {
-        throw new TypeError("file#ops: options cannot be null/undefined");
-    }
-    var self = prepare(options);
-    if (!self.root) {
-        throw new TypeError("file#ops: options.root cannot be null");
-    }
-    
-    var filepath = path.join(self.root, uri);
-    var newpath = path.join(self.root, to);
+    var self = this;
+    var filepath = path.join(self.root(), uri);
+    var newpath = path.join(self.root(), to);
+    // `filepath` access verification takes place here...
+    /*  var parent = filepath.substring(0, filepath.lastIndexOf('/')); */
+    /*  var toparent = newpath.substring(0, newpath.lastIndexOf('/')); */
+    /*  if (!self.canUpdate(parent)) //error */
+    /*  if (!self.canUpdate(toparent)) //error */
     
     path.exists(filepath, function(exists) {
         if (!exists) {
@@ -111,21 +111,16 @@ module.exports.rename = function(uri, to, options, callback) {
 // to a temp dir and every day have a scheduled task empty the 
 // trash? `uri` is the path to `unlink` or `rmdir`. In case of error
 // It will attempt to move the file/dir to trash.
-module.exports.del = function(uri, options, callback) {
+FileOperation.prototype.del = function(uri, callback) {
     if (typeof callback !== 'function') {
         throw new TypeError("FileInformation#info: callback needs to be a function");
     }
     
-    if (!options) {
-        throw new TypeError("file#ops: options cannot be null/undefined");
-    }
-    var self = prepare(options);
-    if (!self.root) {
-        throw new TypeError("file#ops: options.root cannot be null");
-    }
-    
-    var filepath = path.join(self.root, uri);
-    
+    var self = this;
+    var filepath = path.join(self.root(), uri);
+    // `filepath` access verification takes place here...
+    /*  var parent = filepath.substring(0, filepath.lastIndexOf('/')); */
+    /*  if (!self.canUpdate(parent)) //error */
     path.exists(filepath, function(exists) {
         if (!exists) {
             callback({status:404, error:"Not Found",
@@ -144,11 +139,7 @@ module.exports.del = function(uri, options, callback) {
             // move the file to trash before calling the callback.
             var RMCB = function(err) {
                 if (err) {
-                    var trashF = path.join( self.root,
-                                            self.trash || '.trash',
-                                            uri.replace('/', '|'),
-                                            timestamp());
-                    
+                    var trashF = path.join(self.root(), '.trash', path.basename(uri));
                     fs.rename(filepath, trashF, function(err) {
                         if (err) {
                             callback({status:503, error:"Could not delete",
@@ -172,3 +163,5 @@ module.exports.del = function(uri, options, callback) {
         
     });
 };
+
+module.exports = FileOperation;

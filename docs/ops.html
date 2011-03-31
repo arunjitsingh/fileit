@@ -118,7 +118,6 @@ move the file to trash before calling the callback.</p>             </td>       
                         <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
                             <span class="nx">callback</span><span class="p">({</span><span class="nx">status</span><span class="o">:</span><span class="mi">503</span><span class="p">,</span> <span class="nx">error</span><span class="o">:</span><span class="s2">&quot;Could not delete&quot;</span><span class="p">,</span>
                                 <span class="nx">detail</span><span class="o">:</span><span class="nx">err</span><span class="p">,</span> <span class="nx">where</span><span class="o">:</span><span class="nx">uri</span><span class="p">});</span>
-                            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
                         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
                             <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
                         <span class="p">}</span>
