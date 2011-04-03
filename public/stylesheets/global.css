@@ -14,6 +14,10 @@ a, a:link, a:hover, a:visited {
     color: inherit; 
 }
 
-.button {
+button, .button {
   cursor: pointer;
+}
+.button.disabled {
+    opacity: 0.4;
+    cursor: default;
 }

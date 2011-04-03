@@ -3,21 +3,91 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>File!It</title>
-  <link rel="stylesheet" href="resources/css/global.css" media="all" type="text/css" />
-  <link rel="stylesheet" href="resources/css/index.css" media="all" type="text/css" />
-  <script src="lib/jquery.js"></script><script src="lib/jquery.rest.js"></script>
-  <script src="lib/oo.js"></script>
-  <script src="lib/date.js"></script>
-  <script src="lib/FileIt.js"></script>
-  <script src="resources/scripts/index.js"></script>
+  <link rel="stylesheet" href="stylesheets/global.css" media="all" type="text/css" />
+  <link rel="stylesheet" href="stylesheets/index.css" media="all" type="text/css" />
+  <script src="javascripts/vendor/jquery.js"></script>
+  <script src="javascripts/vendor/jquery.rest.js"></script>
+  <script src="javascripts/vendor/jquery.form.js"></script>
+  <script src="javascripts/vendor/underscore.js"></script>
+  <script src="javascripts/vendor/oo.js"></script>
+  <script src="javascripts/vendor/date.js"></script>
+  <script src="javascripts/vendor/debug.min.js"></script>
+  <script src="javascripts/FI/core.js"></script>
+  <script src="javascripts/FI/controller.js"></script>
+  <script src="javascripts/index.js"></script>
 </head>
-<body onload="loadApplication()">     
+<body>
+    <div id="sidebar">
+        <img src="images/fi-logo.png" height="64">
+        <ul id="app-controls" class="sidebar-controls">
+            <li class="button" id="home" title="Home Folder">
+                <img src="images/fi-home-2.png" height="64">
+            </li>
+            <li class="button disabled" id="shared" title="Files Shared With Me">
+                <img src="images/fi-shared-2.png" height="64">
+            </li>
+            <li class="button disabled" id="links" title="My Links">
+                <img src="images/fi-links-2.png" height="64">
+            </li>
+            <li class="button disabled" id="settings" title="Preferences">
+                <img src="images/fi-settings.png" height="64">
+            </li>
+        </ul>
+        <ul id="file-controls" class="sidebar-controls">
+            <li class="button" id="newdir" title="Create New Folder">
+                <img src="images/fi-newdir.png" height="64">
+            </li>
+            <li class="button disabled" id="delete" title="Delete File/Folder">
+                <img src="images/fi-delete.png" height="64">
+            </li>
+            <li class="button" id="upload" title="Upload to this Folder">
+                <img src="images/fi-upload.png" height="64">
+            </li>
+            <li class="button disabled" id="download" title="Download File">
+                <img src="images/fi-download.png" height="64">
+            </li>
+        </ul>
+    </div>
     <div id="main">
       <div id="browser">
     
       </div>
     </div>
+    
+    <!-- UPLOAD TOOLBAR -->
+    <div id="upload-toolbar" style="display:none">
+        <form action="" method="post" id="upload-form">
+          <table>
+            <tr>
+              <td>File:</td>
+              <td><input type="file" name="file"></td>
+              <td><button type="submit">Upload</button></td>
+              <td><button type="cancel" class="cancel">Cancel</button></td>
+            </tr>
+          </table>
+        </form>
+    </div>
+    
+    <!-- OTHER ELEMENTS -->
     <div id="overlay"></div>
+    <div id="details" style="display:none">
+        <center>
+            <span class="file-name"></span>
+            <img class="file-type" height="256">
+        </center>
+        <ul>
+            <li>Size: <span class="file-size"></span></li>
+            <li>Created: <span class="file-ctime"></span></li>
+            <li>Modified: <span class="file-mtime"></span></li>
+        </ul>
+        <center><div id="buttons">
+            <span class="button" id="open-file" title="View File"><img src="images/fi-open.png" height="64"></span>
+            <span class="button" id="download-file" title="Download File"><img src="images/fi-download.png" height="64"></span>
+            <span class="button" id="delete-file" title="Delete File"><img src="images/fi-delete.png" height="64"></span>
+            <span class="button" id="share-file" title="Share File"><img src="images/fi-share.png" height="64"></span>
+        </div></center>
+    </div>
     <div id="homedata" style="display:none"></div>
+    <div id="hidden" style="display:none"></div>
  </body>
 </html>

@@ -1,0 +1,316 @@
+.code {
+    font-family: "Courier", monospace;
+}
+
+body {
+    visibility: hidden;
+    -webkit-user-select: none;
+}
+
+#overlay {
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 10000;
+    width: inherit;
+    height: inherit;
+    background-color: rgba(0,0,0,0.7);
+    visibility: hidden;
+}
+
+#sidebar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    width: 64px;
+    height: auto;
+    background-color: #808080;
+    -webkit-box-shadow: inset 0 0 8px #000;
+}
+
+#sidebar,
+#sidebar #status-box,
+#app-controls li:hover,
+#app-controls li.selected {
+    background-image: -webkit-gradient(linear, right top, left top,
+        from(rgba(255,255,255,0.05)),
+        color-stop(0.25, rgba(255,255,255,0.15)),
+        color-stop(0.45, rgba(255,255,255,0.20)),
+        color-stop(0.50, rgba(255,255,255,0.15)),
+        color-stop(0.55, rgba(128,128,128,0.15)),
+        to(rgba(0,0,0,0.3))
+        );
+    background-image: -moz-linear-gradient(0deg,
+        rgba(255,255,255,0.05),
+        rgba(255,255,255,0.15) 25%,
+        rgba(255,255,255,0.20) 45%,
+        rgba(255,255,255,0.15) 50%,
+        rgba(128,128,128,0.15) 55%,
+        rgba(0,0,0,0.3)
+        );
+}
+.logged-in #sidebar {
+    background-color: #3070B0;
+}
+#sidebar,
+#sidebar #status-box {
+    -webkit-transition: background-color 2s ease-in-out;
+    -moz-transition: background-color 2s ease-in-out;
+}
+#sidebar #status-box {
+    position: absolute;
+    bottom: 0px; left: 0px;
+    width: 64px; height:64px;
+    -webkit-box-shadow: inset 0 0 10px #000;
+    background-color: #000;
+}
+.online #sidebar #status-box {
+    background-color: #008000;
+}
+.error #sidebar,
+.error #sidebar #status-box,
+.offline #sidebar #status-box {
+    background-color: #800000;
+}
+
+#app-controls li {
+    margin: 10px 0;
+    background-color: transparent;
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+}
+#app-controls li:hover {
+    background-color: #105090;
+    -webkit-box-shadow: inset 0 0 8px #000;
+    -webkit-transition: all 150ms ease-in-out;
+    -moz-transition: all 150ms ease-in-out;
+}
+#app-controls li.selected {
+    background-color: #FFF;
+    z-index: 51;
+}
+
+#app-controls #settings {
+    position:absolute;
+    bottom: 64px;
+}
+
+#main {
+    position: absolute;
+    top: 0px;
+    left:64px;
+    right: 0px;
+    bottom: 0px;
+    width: auto;
+    height: auto;
+    overflow-x: scroll;
+    /*box-shadow: -1px 0 8px black;
+        -webkit-box-shadow: -1px 0 8px black;*/
+    z-index: 50;
+}
+
+#browser {
+    background-color:#FFF;
+    height: 100%;
+    width: inherit;
+}
+
+.column {
+    position: absolute;
+    bottom: 0px;
+    height: auto;
+    background-color: white;
+}
+
+.column .list {
+    padding:0;
+    font-family: "Droid Serif";
+}
+
+.column .list li {
+    list-style: none;
+    padding:5px 5px 5px 26px;
+}
+
+.column .list li.DIR {
+    font-weight: bold;
+    background: url("../images/DIR16.png") no-repeat 2px;
+}
+
+.column .list li:hover {
+    background-color: #FFD;
+    cursor: pointer;
+}
+
+.column .list li.selected {
+    color: white;
+    background-color: blue;
+}
+
+.popup {
+    z-index: 10055;
+    position: absolute;
+    width: 640px;
+    left: 50%;
+    margin-left: -320px;
+
+    height: 250px;
+    top: 50%;
+    margin-top: -125px;
+
+    border: 4px solid white;
+    -webkit-box-shadow: 0 0 15px black;
+    -moz-box-shadow: 0 0 15px black;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    background: #D0D0D0;
+    background: -webkit-gradient(linear, left top, left bottom,
+        from(#D0D0D0),
+        to(#BABABA));
+        overflow: hidden;
+        visibility: hidden;
+}
+
+.popup .close.button {
+    position: absolute;
+    left: 5px;
+    font-size: 16px;
+    font-family: monospace;
+    font-weight: bold;
+    width: 20px;
+    height: 15px;
+    padding: 3px;
+    text-align:center;
+    z-index: +10;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
+#details .file-name, .popup .currentSelection {
+    position: absolute;
+    left: 0;
+    width: 480px;
+    clear: both;
+    text-align: center;
+    font-size: 48px;
+    color: #AAAAAA;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-shadow: 0 1px 0 white;
+}
+
+#details .file-size, #details .file-date {
+    position: absolute;
+    padding: 10px;
+    font-size: 24px;
+    font-family: sans-serif;
+    text-align: center;
+    color: black;
+    background-color: #E1E1E1;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border: 1px solid white;
+    height: 32px;
+}
+
+#details .file-size {  
+    left: 20px;
+    top: 120px;
+    width: 100px;
+}
+
+#details .file-date {
+    left: 160px;
+    top: 120px;
+    width: 260px;
+}
+
+#details #file-download, #new-dir #new-dir-ok {
+    position: absolute;
+    left: 480px;
+    display: block;
+    width: 160px;
+    height: 250px;
+}
+
+.popup .button:hover, #file-download:hover, #new-dir-ok:hover {
+    background-color: rgba(255,255,255,0.8);
+}
+
+.popup .button:active, #file-download:active, #new-dir-ok:active {
+    background-color: rgba(0,0,0,0.3);
+    -webkit-box-shadow: inset 0 0 8px black;
+    -moz-box-shadow: inset 0 0 8px black;
+}
+
+#new-dir #new-dir-name {
+    position: absolute;
+    left: 20px;
+    top:120px;
+    width: 440px;
+    font-size: 32px;
+    border: none;
+    border-bottom: 2px solid black;
+    background: none;
+    font-family: monospace;
+    text-align: center;
+}
+
+#new-dir #new-dir-name:focus {
+    outline:none;
+}
+
+#upload-file .currentSelection {
+    position: absolute;
+    font-size: 48px;
+    height: 64px;
+    top: 93px;
+    left: 10px;
+    right: 250px;
+    width: auto;
+    padding:0px;
+    text-align: left;
+}
+
+#upload-file #upload-frame {
+    visibility: inherit;
+    display: block;
+    border: none;
+    overflow: hidden;
+    position: absolute;
+    right:0px;
+    top:0px;
+    width: 250px;
+    height:250px;
+}
+
+#dlsection {
+    display:none;
+    visibility: hidden;
+    position: absolute;
+    left: -10000px;
+    right: -10000px;
+    z-index: -10000;
+}
+
+::-webkit-scrollbar,
+::-webkit-scrollbar-track-piece,
+::-webkit-resizer {
+    background-color: #FCFCFC;
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb:horizontal {
+  -webkit-transition: all 100ms;
+  background-color: rgba(0,0,0,0.15);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:vertical:hover,
+::-webkit-scrollbar-thumb:horizontal:hover{
+  background-color: rgba(0,0,0,0.50);
+}

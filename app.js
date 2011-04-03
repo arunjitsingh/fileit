@@ -19,6 +19,7 @@ var app = module.exports = express.createServer(/*authOptions*/);
 // bodies (eg. forms, uploads?); router for easy routes
 // via GET, POST, PUT, DELETE; session for.. sessions!
 app.configure(function(){
+    app.use(express.favicon(__dirname+"/public/favicon.ico"));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.logger());
@@ -68,22 +69,31 @@ app.PORT  = settings.port;
 app.serverRoot = settings.files.root;
 app.trashDir = settings.files.trash;
 app.userDir = settings.files.users;
+app.tempDir = settings.files.temp;
 
 // Adding the database to `app`. `app` is passed around to the other
 // modules, which can then use `db`. Uppercasing `DB` to avoid any
 // possible conflicts.
-app.DB = require('./db');
+app._DB = require('./db');
 
 // Routes. All application routing starts here
-app.get('/', function(req, res){
+// No need to route '/'. Express will automatically try
+// public/index.html
+/*app.get('/', function(req, res){
     res.redirect("/index.html");
-});
+});*/
 
 // For all routes `^/browse`. See [browse.js](./browse.html)
 require('./browse')(app);
 
 // For all routes `^/auth`. See [auth.js](./auth/index.html)
 require('./auth')(app);
+
+// For all routes `^/download`. See [download.js](./download.html)
+require('./download')(app);
+
+// For all routes `^/upload`. See [upload.js](./upload.html)
+require('./upload')(app);
 
 // Only listen on `$ node app.js`
 if (!module.parent) {

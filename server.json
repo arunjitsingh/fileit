@@ -4,6 +4,7 @@
     "files":{
         "root":"/Volumes/OLFS/root",
         "trash":"/Volumes/OLFS/root/.trash",
-        "users":"/Volumes/OLFS/root/users"
+        "users":"/Volumes/OLFS/root/users",
+        "temp":"/Volumes/OLFS/root/.tmp"
     }
 }

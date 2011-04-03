@@ -35,6 +35,9 @@ module.exports = function(db) {
                     password_sha: HASH(pw + salt),
                     name: info.name || id,
                     email: info.email || null,
+                    shared: [],
+                    servers: [],
+                    friends: [],
                     type: "user"
                 };
                 db.save(id, userDoc, function(err, res) {

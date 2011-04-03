@@ -126,10 +126,13 @@ module.exports.info = function(uri, options, callback) {
                                         detail:err, where:path.join(uri, file)}, null);
                                     return;
                                 }
-                                var fi = parseStat(st);
+                                var fi = {}; //parseStat(st);
                                 fi['id'] = path.join(uri, file);
-                                if (!fi.isDirectory) {
+                                if (!st.isDirectory()) {
                                     fi['type'] = mimeForFile(fp) || 'FILE';
+                                    fi['isDirectory'] = false;
+                                } else {
+                                    fi['isDirectory'] = true;
                                 }
                                 fileinfo.children.push(fi);
                                 

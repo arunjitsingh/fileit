@@ -6,11 +6,11 @@ var json = JSON.stringify,
 module.exports = function(app) {
     
     var AUTH = '/auth';
-    var USERS = require('./users')(app.DB);
+    var USERS = require('./users')(app._DB);
     
     app.get(AUTH, function(request, response) {
         response.contentType('json');
-        // get auth info and send it in response
+        // Get auth info and send it in response
         var user = auth(request);
         if (user && user._id) {
             response.send(json({ok:true, user:user}), 200);
@@ -21,7 +21,7 @@ module.exports = function(app) {
     
     app.post(AUTH, function(request, response) {
         response.contentType('json');
-        // login
+        // Login
         var user = null;
         if (request.is('json')) {
             user = request.body;
@@ -56,7 +56,7 @@ module.exports = function(app) {
     
     app.del(AUTH, function(request, response) {
         response.contentType('json');
-        // logout
+        // Logout
         request.session.destroy();
         response.send(json({ok:true}), 200);
     });

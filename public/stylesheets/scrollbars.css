@@ -1,0 +1,17 @@
+::-webkit-scrollbar,
+::-webkit-scrollbar-track-piece,
+::-webkit-resizer {
+    background-color: #FCFCFC;
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb:horizontal {
+  -webkit-transition: all 100ms;
+  background-color: rgba(0,0,0,0.15);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:vertical:hover,
+::-webkit-scrollbar-thumb:horizontal:hover{
+  background-color: rgba(0,0,0,0.50);
+}

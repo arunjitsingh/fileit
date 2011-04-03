@@ -1,0 +1,178 @@
+@import url('buttons.css');
+@import url('scrollbars.css');
+
+body {
+    visibility: hidden;
+    -webkit-user-select: none;
+    overflow: hidden;
+}
+
+#overlay {
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 10000;
+    width: inherit;
+    height: inherit;
+    background-color: rgba(0,0,0,0.7);
+    visibility: hidden;
+}
+
+#sidebar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    width: 64px;
+    height: auto;
+    background-color: #456555;
+    -webkit-box-shadow: inset 0 0 8px #000;
+}
+
+#sidebar,
+.sidebar-controls li:hover,
+.sidebar-controls li:active,
+.sidebar-controls li.selected {
+    background-image: -webkit-gradient(linear, right top, left top,
+        from(rgba(255,255,255,0.05)),
+        color-stop(0.25, rgba(255,255,255,0.15)),
+        color-stop(0.45, rgba(255,255,255,0.20)),
+        color-stop(0.50, rgba(255,255,255,0.15)),
+        color-stop(0.55, rgba(128,128,128,0.15)),
+        to(rgba(0,0,0,0.3))
+        );
+    background-image: -moz-linear-gradient(0deg,
+        rgba(255,255,255,0.05),
+        rgba(255,255,255,0.15) 25%,
+        rgba(255,255,255,0.20) 45%,
+        rgba(255,255,255,0.15) 50%,
+        rgba(128,128,128,0.15) 55%,
+        rgba(0,0,0,0.3)
+        );
+}
+
+#sidebar {
+    -webkit-transition: background-color 2s ease-in-out;
+    -moz-transition: background-color 2s ease-in-out;
+}
+
+.error #sidebar,
+.offline #sidebar {
+    background-color: #800000;
+}
+.sidebar-controls li {
+    background-color: transparent;
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+}
+.sidebar-controls li:hover {
+    background-color: rgba(255,255,255,0.25);
+    -webkit-transition: all 150ms ease-in-out;
+    -moz-transition: all 150ms ease-in-out;
+}
+.sidebar-controls li:active {
+    background-color: rgba(0,0,0,0.25);
+    -webkit-box-shadow: inset 0 0 8px #000;
+}
+.sidebar-controls li.selected {
+    background-color: #FFF;
+    z-index: 51;
+}
+.sidebar-controls li.selected:hover,
+.sidebar-controls li.disabled:hover {
+    -webkit-box-shadow: none;
+    -webkit-transition: none;
+    -moz-transition: none;
+}
+.sidebar-controls li.disabled:hover {
+    background-color: transparent;
+    background-image: none;
+}
+
+#app-controls #settings {
+    position:absolute;
+    bottom: 0px;
+}
+
+#main {
+    position: absolute;
+    top: 0px;
+    left:64px;
+    right: 0px;
+    bottom: 0px;
+    width: auto;
+    height: auto;
+    overflow-x: scroll;
+    /*box-shadow: -1px 0 8px black;
+        -webkit-box-shadow: -1px 0 8px black;*/
+    z-index: 50;
+}
+
+#browser {
+    background-color:#FFF;
+    height: 100%;
+    width: inherit;
+}
+
+.column {
+    position: absolute;
+    bottom: 0px;
+    height: auto;
+    background-color: white;
+}
+
+.column .list {
+    padding:0;
+    font-family: "Droid Serif";
+}
+
+.column .list li {
+    list-style: none;
+    padding:5px 5px 5px 26px;
+}
+
+.column .list li.DIR {
+    font-weight: bold;
+    background: url("../images/fi-dir-2.png") no-repeat 2px;
+}
+
+.column .list li:hover {
+    background-color: #FFD;
+    cursor: pointer;
+}
+
+.column .list li.selected {
+    color: white;
+    background-color: #5070D0;
+}
+
+
+#upload-toolbar {
+    position: absolute;
+    left: 0; top:0;
+    width: 720px; 
+    height: 64px; 
+    background-color: rgba(0,0,0,0.4);
+    color: white;
+    z-index: 999;
+    font: 16px "Droid Sans" bold;
+    text-transform: uppercase;
+}
+#upload-toolbar input,
+#upload-toolbar button {
+    font: 16px "Droid Sans" bold;
+    text-transform: uppercase;
+}
+
+#details {
+    font-family: "Droid Serif", sans-serif;
+    font-size: 12px;
+}
+
+#details .file-name,
+#details .file-size,
+#details .file-ctime,
+#details .file-mtime {
+    font-size: 16px;
+    font-weight: bold;
+}
