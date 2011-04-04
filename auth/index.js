@@ -28,9 +28,12 @@ module.exports = function(app) {
             if (!user.id || !user.password) {
                 user = null;
             }
-        } 
-        if (!user) {
+        } else {
             response.send(json({error:'Must use JSON and send `id`, `password`'}), 401);
+            return;
+        }
+        if (!user) {
+            response.send(json({error:"Invalid ID or Password"}), 401);
             return;
         }
         USERS.verifyUser(user.id, user.password, function(err, res) {

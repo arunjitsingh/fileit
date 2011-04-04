@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>File!It</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>File!It</title>
   <link rel="stylesheet" href="stylesheets/global.css" media="all" type="text/css" />
   <link rel="stylesheet" href="stylesheets/index.css" media="all" type="text/css" />
   <script src="javascripts/vendor/jquery.js"></script>
@@ -17,77 +17,106 @@
   <script src="javascripts/index.js"></script>
 </head>
 <body>
-    <div id="sidebar">
-        <img src="images/fi-logo.png" height="64">
-        <ul id="app-controls" class="sidebar-controls">
-            <li class="button" id="home" title="Home Folder">
-                <img src="images/fi-home-2.png" height="64">
-            </li>
-            <li class="button disabled" id="shared" title="Files Shared With Me">
-                <img src="images/fi-shared-2.png" height="64">
-            </li>
-            <li class="button disabled" id="links" title="My Links">
-                <img src="images/fi-links-2.png" height="64">
-            </li>
-            <li class="button disabled" id="settings" title="Preferences">
-                <img src="images/fi-settings.png" height="64">
-            </li>
-        </ul>
-        <ul id="file-controls" class="sidebar-controls">
-            <li class="button" id="newdir" title="Create New Folder">
-                <img src="images/fi-newdir.png" height="64">
-            </li>
-            <li class="button disabled" id="delete" title="Delete File/Folder">
-                <img src="images/fi-delete.png" height="64">
-            </li>
-            <li class="button" id="upload" title="Upload to this Folder">
-                <img src="images/fi-upload.png" height="64">
-            </li>
-            <li class="button disabled" id="download" title="Download File">
-                <img src="images/fi-download.png" height="64">
-            </li>
-        </ul>
+  <div id="sidebar">
+    <img src="images/fi-logo.png" height="64">
+    <ul id="app-controls" class="sidebar-controls">
+      <li class="button" id="home" title="Home Folder">
+        <img src="images/fi-home-2.png" height="64">
+      </li>
+      <li class="button disabled" id="shared" title="Files Shared With Me">
+        <img src="images/fi-shared-2.png" height="64">
+      </li>
+      <li class="button disabled" id="links" title="My Links">
+        <img src="images/fi-links-2.png" height="64">
+      </li>
+      <li class="button disabled" id="settings" title="Preferences">
+        <img src="images/fi-settings.png" height="64">
+      </li>
+    </ul>
+    <ul id="file-controls" class="sidebar-controls">
+      <li class="button" id="newdir" title="Create New Folder">
+        <img src="images/fi-newdir.png" height="64">
+      </li>
+      <li class="button disabled" id="delete" title="Delete File/Folder">
+        <img src="images/fi-delete.png" height="64">
+      </li>
+      <li class="button" id="upload" title="Upload to this Folder">
+        <img src="images/fi-upload.png" height="64">
+      </li>
+      <li class="button disabled" id="download" title="Download File">
+        <img src="images/fi-download.png" height="64">
+      </li>
+    </ul>
+  </div>
+  <div id="main">
+    <div id="browser">
+      <!-- THE MAIN BROWSER -->
     </div>
-    <div id="main">
-      <div id="browser">
-    
-      </div>
+  </div>
+
+  <!-- OTHER ELEMENTS -->
+  <div id="overlay">
+    <span id="close-overlay" class="button cancel">x</span>
+    <div id="overlay-container"></div>
+    <div class="ajax-working" style="display:none"><img src="images/loader.gif"></div>
+  </div>
+  
+  <div id="template-elements" style="display:none">
+    <!-- LOGIN -->
+    <div id="login"><center>
+      <form action="/auth" method="POST">
+        <h3>Log In</h3>
+        <table>
+          <tr>
+            <td>Username</td>
+            <td>Password</td>
+          </tr>
+          <tr>
+            <td><input type="text" id="username" placeholder="Username" required></td>
+            <td><input type="password" id="password" placeholder="Password" required></td>
+          </tr>
+        </table>
+        <button type="submit">Log In</button>
+      </form>
+      <button type="cancel" class="cancel">Sign up</button>
+      <div class="infobar">Log in. All fields are mandatory</div>
+    </center></div>
+    <!-- UPLOAD BAR -->
+    <div id="upload-toolbar"><center>
+      <form action="" method="POST" id="upload-form">
+        <h3>Upload File</h3>
+        <span class="upload-to-dir"></span>
+        <table>
+          <tr>
+            <td><input type="file" name="file"></td>
+          </tr>
+        </table>
+        <button type="submit">Upload</button>
+      </form>
+      <button type="cancel" class="cancel">Cancel</button>
+      <div class="infobar">Upload to the file server. This will use your storage</div>
+    </center></div>
+    <!-- FILE DETAILS -->
+    <div id="details">
+      <center>
+        <span class="file-name"></span>
+        <img class="file-type" height="256">
+      </center>
+      <ul>
+        <li>Size: <span class="file-size"></span></li>
+        <li>Created: <span class="file-ctime"></span></li>
+        <li>Modified: <span class="file-mtime"></span></li>
+      </ul>
+      <div id="buttons"><center>
+        <span class="button" id="open-file" title="View File"><img src="images/fi-open.png" height="64"></span>
+        <span class="button" id="download-file" title="Download File"><img src="images/fi-download.png" height="64"></span>
+        <span class="button" id="delete-file" title="Delete File"><img src="images/fi-delete.png" height="64"></span>
+        <span class="button" id="share-file" title="Share File"><img src="images/fi-share.png" height="64"></span>
+      </center></div>
     </div>
-    
-    <!-- UPLOAD TOOLBAR -->
-    <div id="upload-toolbar" style="display:none">
-        <form action="" method="post" id="upload-form">
-          <table>
-            <tr>
-              <td>File:</td>
-              <td><input type="file" name="file"></td>
-              <td><button type="submit">Upload</button></td>
-              <td><button type="cancel" class="cancel">Cancel</button></td>
-            </tr>
-          </table>
-        </form>
-    </div>
-    
-    <!-- OTHER ELEMENTS -->
-    <div id="overlay"></div>
-    <div id="details" style="display:none">
-        <center>
-            <span class="file-name"></span>
-            <img class="file-type" height="256">
-        </center>
-        <ul>
-            <li>Size: <span class="file-size"></span></li>
-            <li>Created: <span class="file-ctime"></span></li>
-            <li>Modified: <span class="file-mtime"></span></li>
-        </ul>
-        <center><div id="buttons">
-            <span class="button" id="open-file" title="View File"><img src="images/fi-open.png" height="64"></span>
-            <span class="button" id="download-file" title="Download File"><img src="images/fi-download.png" height="64"></span>
-            <span class="button" id="delete-file" title="Delete File"><img src="images/fi-delete.png" height="64"></span>
-            <span class="button" id="share-file" title="Share File"><img src="images/fi-share.png" height="64"></span>
-        </div></center>
-    </div>
-    <div id="homedata" style="display:none"></div>
-    <div id="hidden" style="display:none"></div>
- </body>
+  </div>
+  
+  <div id="homedata" style="display:none"></div>
+  <div id="hidden" style="display:none"></div>
+</body>
 </html>

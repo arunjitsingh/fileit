@@ -4,8 +4,23 @@
 
 $(document).ready(function() {
     
+    
+    $.fn.centerBox = function() {
+        return this.each(function() {
+            var s = this.style;
+            if (s.position === 'absolute') {
+                s.left = (($(window).width() - $(this).width()) / 2) + "px";
+                s.top = (($(window).height() - $(this).height()) / 2) + "px";
+            }
+        });
+    };
+    
     if (window.self) {
         window._self = window.self;
+    }
+    if (!FI.APP) {
+        alert("Application load failed in 'index.js'. Try reloading");
+        throw "Application Load Error";
     }
     // The delegate for FI.APP
     var self = {
@@ -16,14 +31,36 @@ $(document).ready(function() {
         currentColumn   : null,
         deletion        : null
     };
+    self.$ = $({});
+    self.$body = $(document.body);
+    self.$body
+        .ajaxError(function(evt, xhr, sett, err) {
+            if (xhr.status === 401) {
+                self.doLogin();
+            }
+            self.$.trigger('error', [err, xhr]);
+        })
+        .ajaxSuccess(function(res) {
+            self.$.trigger('success', [res]);
+        })
+        .ajaxSend(function() {
+            $("#overlay .cancel").addClass('disabled');
+            $(".ajax-working").show();
+        })
+        .ajaxComplete(function() {
+            $("#overlay .cancel").removeClass('disabled');
+            $(".ajax-working").hide();
+        });
     
-    // self.__currentSelection = null;
-    // self.currentSelection = function(sel) {
-    //     if (sel) {
-    //         self.__currentSelection = sel;
-    //     }
-    //     return self.__currentSelection;
-    // };
+    self.$.bind({
+        "error": function(evt, err, obj) {
+            debug.error(err, obj);
+            self.$body.addClass("error");
+        },
+        "success": function(evt, obj) {
+            self.$body.removeClass("error");
+        }
+    });
     
     self.changeView = function(view) {
         if (self.views.indexOf(view) > -1) {
@@ -49,23 +86,28 @@ $(document).ready(function() {
         return self;
     };
     
-    var app = FI.APP;
-    var browser  = FI.APP.browse;
-    var download = FI.APP.download;
+    var APP      = FI.APP;
+    var BROWSER  = FI.APP.browse;
+    var DOWNLOAD = FI.APP.download;
+    var USER     = FI.APP.user;
     
     var toUploadURI = function(id) {
-        return FI.pathJoin(FI.APP.kServerRoot, FI.APP.kUploadURI, id);
+        return FI.pathJoin(APP.kServerRoot, APP.kUploadURI, id);
     };
     
+    self.columns = new(FI.ColumnView)("#browser", APP.ColumnViewOptions);
     
     //TODO: put this as an event
     var updateHash = function(id) {
         //FI.log("HASH", FI.APP.user.home, id);
         id = id || self.currentSelection.data().id;
-        var uri = FI.pathJoin(FI.APP.user.home.id, id);
+        var uri = FI.pathJoin(USER.home.id, id);
         window.location.hash = uri;
     };
     
+    
+    
+    // Some delegate methods for BROWSER
     self.browse.didFetch = function(response) {
         if (response && response.ok) {
             if(response.content) {
@@ -80,29 +122,30 @@ $(document).ready(function() {
     };
 
     var renderDirectory = function(content) {
-        var list = FI.ListView.createSimpleList({template:FI.APP.ListItemTemplate});
+        var list = FI.ListView.createSimpleList({template: APP.ListItemTemplate});
         list.updateContent(content);
-        FI.APP.columns.newColumn().addSubview(list.view());
-        FI.APP.columns.renderColumns();
+        self.columns.newColumn().addSubview(list.view());
+        self.columns.renderColumns();
         $('#main').get(0).scrollLeft = 10000;
     };
 
     var renderFile = function(file) {
-        var elt = $('#details').clone().show();
+        var elt = $('#details').clone(true).show();
         elt.data(file);
-        FI.View.renderView(elt, {VIEW:FI.APP.DetailsViewAttributes});
-        FI.APP.columns.newColumn().addSubview(elt);
-        FI.APP.columns.renderColumns();
+        FI.View.renderView(elt, {VIEW: APP.DetailsViewAttributes});
+        self.columns.newColumn().addSubview(elt);
+        self.columns.renderColumns();
         $('#main').get(0).scrollLeft = 10000;
     };
 
     self.browse.didDelete = function(response) {
         if (response.ok) {
-            var elt = (self.deletion) ? self.deletion : $('.selected').last();
+            var elt = self.currentSelection;
+            self.cancelSelection(elt);
             self.currentColumn = elt.first().parents('.column');
             if (self.currentColumn.length > 0) {
                 var vi = self.currentColumn.data().viewIndex;
-                FI.APP.columns.selectColumn(vi);
+                self.columns.selectColumn(vi);
             }
             elt.remove();
             self.deletion = null;
@@ -127,7 +170,7 @@ $(document).ready(function() {
         self.currentSelection = elt;
         var id = elt.data().id;
         //FI.log('data', elt.data());
-        browser.fetch(id);
+        BROWSER.fetch(id);
         self.selectionChanged();
     };
     
@@ -165,6 +208,76 @@ $(document).ready(function() {
         updateHash(id);
     };
     
+    // Authentication methods
+    self.didAuthenticate = function(response, status, xhr) {
+        if (response && response.ok) {
+            self.columns.selectColumn(-1);
+            USER = response.user;
+            USER.home = {
+                id:'/',
+                isDirectory: true
+            };
+            self.currentSelection = $('#homedata').data(USER.home);
+            BROWSER.fetch(USER.home.id);
+            self.changeView("home");
+            $("#main").show();
+            self.hideOverlay();
+        }
+        else {
+            self.didNotAuthenticate(xhr, status, response);
+        }
+    };
+    self.didNotAuthenticate = function(xhr, status, error) {
+        self.doLogin(JSON.parse(xhr.responseText));
+    };
+    
+    
+    self.doLogin = function(error) {
+        var elt = $("#login").clone(); //not clone(true)
+        var form = elt.find("form[method=POST]");
+        if (error) {
+            elt.addClass("error");
+            elt.find(".infobar").addClass("error").text(error.error);
+        }
+        form.submit(function(evt) {
+            evt.preventDefault(); // V.IMP
+            var username = form.find("#username").val();
+            var password = form.find("#password").val();
+            APP.authenticateUser(username, password);
+        });
+        self.showOverlay(elt, {cancel:function() {
+            window.location = "/signup.html";
+        }});
+    };
+    
+    
+    self.showOverlay = function(elt, options) {
+        elt = $(elt);
+        var overlay = $("#overlay"),
+            container = overlay.find("#overlay-container");
+        container.empty();
+        container.append(elt);
+        $("#close-overlay, .cancel", overlay).click(function() {
+            if ($(this).hasClass('disabled')) return;
+            if (options && options.cancel && typeof(options.cancel)==='function')
+                options.cancel();
+            self.hideOverlay();
+        });
+        $(".ok", overlay).click(function() {
+            if ($(this).hasClass('disabled')) return;
+            if (options && options.ok && typeof(options.ok)==='function')
+                options.ok();
+            self.hideOverlay();
+        });
+        elt.centerBox();
+        overlay.show();
+    };
+    self.hideOverlay = function() {
+        var overlay = $("#overlay"),
+            container = overlay.find("#overlay-container");
+        container.empty();
+        overlay.hide();
+    };
     
     // Setup the application
     FI.APP.setup({
@@ -174,51 +287,70 @@ $(document).ready(function() {
     
     
     // UI events
-    var form = $("#upload-form");
-    form.submit(function(evt) {
-        evt.preventDefault();
-        var data = self.currentSelection.data();
-        if (!data.isDirectory) {
-            //FI.APP.trigger('error',["Can't upload to a file!"]);
-            return false;
-        }
-        var id = data.id;
-        var fileName = form.find("input[name=file]").val();
-
-        if (_.isEmpty(fileName) || (/no file selected/i).test(fileName)) {
-          //FI.APP.trigger("error", ["Can't Upload! Please select a file"]);
-          return false;
-        }
-        form.ajaxSubmit({
-            url: FI.pathJoin('/upload', id),
-            type: "POST",
-            success: function(response, status, xhr) {
-                // Upload complete
-                response = parse($(response).text());
-            },
-            error: function(xhr, error, status) {
-                // Upload error
-            },
-            clearForm: true
-        });
-        return false;
-    });
     $("#upload").click(function() {
         if ($(this).hasClass('disabled')) return;
-        $("#upload-toolbar").show();
-    });
-    $("#upload-toolbar .cancel").click(function() {
-        $("#upload-toolbar").hide();
+        var elt = self.currentSelection;
+        var data = elt.data();
+        var id = data.id;
+        if (!data.isDirectory) {
+            //FI.APP.trigger('error',["Can't upload to a file!"]);
+            return;
+        }
+        var uploadBar = $("#upload-toolbar").clone(); //not clone(true)
+        $(".upload-to-dir", uploadBar).text();
+        var form = $("#upload-form", uploadBar);
+        form.submit(function(evt) {
+            evt.preventDefault(); // V.IMP!
+            evt.stopPropagation();
+            var fileName = form.find("input[name=file]").val();
+            if (_.isEmpty(fileName) || (/no file selected/i).test(fileName)) {
+              //FI.APP.trigger("error", ["Can't Upload! Please select a file"]);
+              return false;
+            }
+            form.ajaxSubmit({
+                url: FI.pathJoin('/upload', id),
+                type: "POST",
+                success: function(response, status, xhr) {
+                    if (!response.ok) {
+                        try {
+                            response = parse($(response).text());
+                        } catch(err) {}
+                    }
+                    
+                    if (response && response.ok) {
+                        self.currentColumn = self.currentSelection.first().parents('.column');
+                        if (self.currentColumn.length === 0) {
+                            self.columns.selectColumn(-1);
+                        } else {
+                            var vi = self.currentColumn.data().viewIndex;
+                            self.columns.selectColumn(vi);
+                        }
+                        
+                        // var data = self.currentSelection.data(),
+                        //     id = data.id;
+                        BROWSER.fetch(id);
+                        self.hideOverlay();
+                    }
+                },
+                error: function(xhr, error, status) {
+                    // Upload error
+                },
+                clearForm: true
+            });
+            return false;
+        });
+        self.showOverlay(uploadBar);
     });
     
     
     $("#delete, #delete-file").click(function() {
         if ($(this).hasClass('disabled')) return;
-        var id = self.currentSelection.data().id;
+        var elt = self.currentSelection;
+        var id = elt.data().id;
         var del = confirm(id+" will be deleted!");
         if (!del) return;
         else {
-            browser.remove(id);
+            BROWSER.remove(id);
         }
     });
     $("#download, #download-file").click(function() {
@@ -228,38 +360,17 @@ $(document).ready(function() {
             // Download error: Nothing selected!
             return;
         }
-        var ifr = download(id);
+        var ifr = DOWNLOAD(id);
         $("#hidden").get(0).appendChild(ifr);
     });
     
     
-    $(document.body)
-        .ajaxError(function(evt, xhr, sett, err) {
-            // FI.APP.trigger('error', [err, xhr]);
-        })
-        .ajaxSuccess(function(res) {
-            // FI.APP.trigger('success', [res]);
-        });
-    
-    
-    FI.APP.authenticateUser('arunjitsingh', 'arunjitsingh', function(res) {
-        if (res && res.ok) {
-            FI.APP.columns.selectColumn(-1);
-            FI.APP.user = res.user;
-            FI.APP.user.home = {
-                id:'/',
-                isDirectory: true
-            };
-            self.currentSelection = $('#homedata').data(FI.APP.user.home);
-            browser.fetch(FI.APP.user.home.id);
-            FI.APP.trigger('sidebar-selection', ['#home']);
-            document.body.style['visibility'] = 'visible';
-        }
-        else {
-            // Authentication error
-        }
-    });
+    self.doLogin();
+    //APP.authenticateUser('arunjitsingh', 'arunjitsingh');
     
     // DO NOT DO THIS! DEBUGGING ONLY
     window.SELF = self;
+    // Rebind window.self;
+    window.self = window._self;
+    delete window._self;
 });

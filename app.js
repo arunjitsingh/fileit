@@ -6,8 +6,9 @@ var express = require('express');
 // cause the browser to show a warning
 var fs = require('fs');
 var authOptions = {
-    key: fs.readFileSync(__dirname + '/ssl/prkey.pem'),
-    cert: fs.readFileSync(__dirname + '/ssl/cert.pem')
+    key: fs.readFileSync(__dirname + '/ssl/key.pem'),
+    cert: fs.readFileSync(__dirname + '/ssl/cert.pem'),
+    ca: fs.readFileSync(__dirname + '/ssl/cert.pem')
 };
 
 // The application. This supports routing, downloading and uploading.

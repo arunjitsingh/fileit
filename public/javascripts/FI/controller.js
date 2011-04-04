@@ -16,7 +16,7 @@
         parse = JSON.parse;
 
     if (FI.APP) FI._APP = FI.APP;
-    FI.APP = $({VERSION:'0.1.0ß'});
+    FI.APP = {VERSION:'0.1.0ß'};
     $.extend(FI.APP, {
         kServerRoot         : '/',
         kAuthenticationURI  : 'auth',
@@ -43,8 +43,11 @@
     var kRequestDefaults = {
         //headers: kDefaultRequestHeaders,
         contentType: kDefaultContentType,
+        mimeType: kDefaultContentType,
         dataType: kDefaultDataType
     };
+    
+    $.ajaxSetup(kRequestDefaults);
     
     var POST = 'POST',
         GET  = 'GET',
@@ -52,7 +55,7 @@
         DELETE = 'DELETE';
     
     var ajaxOptions = function(opts) {
-        return $.extend({}, kRequestDefaults, opts);
+        return $.extend({}, /*kRequestDefaults,*/ opts);
     };
     
     
@@ -220,19 +223,17 @@
     };
 
     FI.APP.columnWidth = 325;
-
-    FI.APP.columns = null;
+    FI.APP.ColumnViewOptions = {
+        columnWidth: FI.APP.columnWidth,
+        autoScrollX: false,
+        columnCSS: {
+            'width':FI.APP.columnWidth, 
+            'height':'inherit'
+        }
+    };
+    
 
     FI.APP.setup = function(options) {
-        var $b = options.browser || 'browser';
         delegate = options.delegate;
-        FI.APP.columns = new(FI.ColumnView)($b, {
-            columnWidth: FI.APP.columnWidth,
-            autoScrollX: false,
-            columnCSS: {
-                'width':FI.APP.columnWidth, 
-                'height':'inherit'
-            }
-        });
     };
 })();

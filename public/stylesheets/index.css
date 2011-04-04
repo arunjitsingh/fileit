@@ -1,21 +1,10 @@
 @import url('buttons.css');
+@import url('inputs.css');
 @import url('scrollbars.css');
 
 body {
-    visibility: hidden;
     -webkit-user-select: none;
     overflow: hidden;
-}
-
-#overlay {
-    position: absolute;
-    top:0;
-    left:0;
-    z-index: 10000;
-    width: inherit;
-    height: inherit;
-    background-color: rgba(0,0,0,0.7);
-    visibility: hidden;
 }
 
 #sidebar {
@@ -95,6 +84,7 @@ body {
 }
 
 #main {
+    display: none;
     position: absolute;
     top: 0px;
     left:64px;
@@ -146,22 +136,72 @@ body {
     background-color: #5070D0;
 }
 
-
+#login,
 #upload-toolbar {
     position: absolute;
-    left: 0; top:0;
-    width: 720px; 
-    height: 64px; 
-    background-color: rgba(0,0,0,0.4);
+    left: 50%; margin-left: -360px;
+    top: 20%;
+    width: 720px;
+    padding: 20px 0;
     color: white;
-    z-index: 999;
     font: 16px "Droid Sans" bold;
-    text-transform: uppercase;
+    background-color: rgba(0,0,0,0.25);
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    box-shadow: inset 0 0 5px #000;
+    -webkit-box-shadow: inset 0 0 5px #000;
+    -moz-box-shadow: inset 0 0 5px #000;
 }
-#upload-toolbar input,
+#login button,
 #upload-toolbar button {
-    font: 16px "Droid Sans" bold;
+    margin-top: 10px;
+}
+
+#overlay {
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 10000;
+    width: inherit;
+    height: inherit;
+    background-color: rgba(0,0,0,0.85);
+    display:none;
+}
+#overlay h3 {
+    margin:0; padding: 0;
+    font-size: 24px;
     text-transform: uppercase;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px #FFF;
+}
+#overlay .ajax-working {
+    postion: absolute; bottom: 50px; left: 0;
+    width: 100%; text-align: center;
+}
+
+#overlay-container {
+
+}
+#overlay-container input,
+#overlay-container button {
+    font: 16px "Droid Sans" bold;
+}
+#overlay-container .button-bar {
+    float: right;
+}
+#overlay #close-overlay {
+    position: absolute; left: 20px; top: 20px;
+    font: 14px "Monaco", monospace;
+    background-color: #000;
+    color: #FFF;
+    border: 2px solid #FFF;
+    width: 20px; height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 2em;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
 }
 
 #details {
@@ -175,4 +215,17 @@ body {
 #details .file-mtime {
     font-size: 16px;
     font-weight: bold;
+}
+
+.infobar {
+    margin-top: 55px;
+    padding: 10px 0;
+    width: 100%;
+    text-align: center;
+    font: 14px "Droid Serif";
+    background-color: #000;
+    color: #0AF;
+}
+.infobar.error {
+    color: #A00;
 }

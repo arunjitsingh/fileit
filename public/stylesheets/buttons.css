@@ -1,4 +1,4 @@
-button, input {
+button {
   cursor: pointer;
   background-color: rgba(44, 44, 44, 0.8);
   color: #cfcfcf;
@@ -8,25 +8,17 @@ button, input {
   padding: 0.4em 1.3em;
   border: 1px solid #CCC;
 }
-button:hover, input:hover {
+button:hover {
   background-color: rgba(99, 99, 99, 0.8);
 }
-button:active, input:active {
+button:active {
   background-color: rgba(22, 22, 22, 0.8);
 }
-button:focus, input:focus {
+button:focus {
   outline: none;
   box-shadow: 0 0 16px #0af;
   -webkit-box-shadow: 0 0 16px #0af, inset 0 0 2px #000;
   -moz-box-shadow: 0 0 16px #0af, inset 0 0 2px #000;
-}
-
-input:disabled {
-  border-color: #888;
-}
-input:disabled:hover {
-  cursor: default;
-  background-color: rgba(44, 44, 44, 0.8);
 }
 
 button {
