@@ -23,7 +23,7 @@ app.configure(function(){
     app.use(express.favicon(__dirname+"/public/favicon.ico"));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(express.logger());
+    //app.use(express.logger());
     app.use(express.cookieParser());
     app.use(express.session({secret:"fileit!"}));
     app.use(app.router);
@@ -95,6 +95,9 @@ require('./download')(app);
 
 // For all routes `^/upload`. See [upload.js](./upload.html)
 require('./upload')(app);
+
+// For all routes `^/signup`. See [signup.js](./signup.html)
+require('./signup')(app);
 
 // Only listen on `$ node app.js`
 if (!module.parent) {

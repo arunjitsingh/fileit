@@ -35,6 +35,6 @@ try {
 }
 
 var db = connection.database('fi-users');
-db.uuids = connection.uuids;
+db.connection = connection;
 
 module.exports = db;

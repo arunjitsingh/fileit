@@ -14,6 +14,7 @@ module.exports = function(req, userDoc) {
     if (userDoc && typeof(userDoc) === 'object') {
         userDoc.id = userDoc._id;
         req.session.user = userDoc;
+        console.log("New user in session", userDoc);
         return parseDoc(req.session.user);
     }
     if (!req.session || !req.session.user) {

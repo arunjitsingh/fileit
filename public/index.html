@@ -3,8 +3,9 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title>File!It</title>
-  <link rel="stylesheet" href="stylesheets/global.css" media="all" type="text/css" />
-  <link rel="stylesheet" href="stylesheets/index.css" media="all" type="text/css" />
+  <link rel="stylesheet" href="stylesheets/reset.css" media="all" type="text/css">
+  <link rel="stylesheet" href="stylesheets/global.css" media="all" type="text/css">
+  <link rel="stylesheet" href="stylesheets/index.css" media="all" type="text/css">
   <script src="javascripts/vendor/jquery.js"></script>
   <script src="javascripts/vendor/jquery.rest.js"></script>
   <script src="javascripts/vendor/jquery.form.js"></script>
@@ -63,38 +64,44 @@
   
   <div id="template-elements" style="display:none">
     <!-- LOGIN -->
-    <div id="login"><center>
+    <div id="login" class="dialog"><center>
       <form action="/auth" method="POST">
-        <h3>Log In</h3>
+        <img src="images/fi-logo.png" alt="FILE!IT" height="256">
+        <h3>Log in to <span class="F-I">FILE<span class="F-I-ex">!</span>IT</span><h3>
         <table>
-          <tr>
-            <td>Username</td>
-            <td>Password</td>
-          </tr>
           <tr>
             <td><input type="text" id="username" placeholder="Username" required></td>
             <td><input type="password" id="password" placeholder="Password" required></td>
+            <td><button type="submit">Log In</button></td>
           </tr>
         </table>
-        <button type="submit">Log In</button>
       </form>
-      <button type="cancel" class="cancel">Sign up</button>
-      <div class="infobar">Log in. All fields are mandatory</div>
+      <button type="button" class="cancel">Sign up</button>
     </center></div>
     <!-- UPLOAD BAR -->
-    <div id="upload-toolbar"><center>
+    <div id="upload-bar" class="dialog"><center>
       <form action="" method="POST" id="upload-form">
-        <h3>Upload File</h3>
-        <span class="upload-to-dir"></span>
+        <h3 class="upload-to-dir"></h3>
         <table>
           <tr>
             <td><input type="file" name="file"></td>
+            <td><button type="submit">Upload</button></td>
           </tr>
         </table>
-        <button type="submit">Upload</button>
       </form>
-      <button type="cancel" class="cancel">Cancel</button>
-      <div class="infobar">Upload to the file server. This will use your storage</div>
+      <button type="button" class="cancel">Cancel</button>
+    </center></div>
+    <!-- NEW DIR -->
+    <div id="newdir-bar" class="dialog"><center>
+        <h3>Create a new folder in <span class="newdir-parent"></span></h3>
+        <table>
+          <tr>
+            <td><span class="newdir-parent"></span></td>
+            <td><input type="text" name="dirname" placeholder="folder"></td>
+            <td><button class="ok">OK</button></button>
+          </tr>
+        </table>
+      <button type="button" class="cancel">Cancel</button>
     </center></div>
     <!-- FILE DETAILS -->
     <div id="details">

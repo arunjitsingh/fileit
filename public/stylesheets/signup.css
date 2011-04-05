@@ -1,0 +1,98 @@
+@import url('fonts.css');
+@import url('buttons.css');
+@import url('inputs.css');
+@import url('scrollbars.css');
+
+body {
+    background-color: #0AF;
+    font-family: "Droid Serif";
+    font-weight: normal;
+    text-align: center;
+}
+#bodybg {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: -webkit-gradient(linear, left top, left bottom,
+        from(transparent), to(rgba(0,0,0,0.5)));
+}
+
+#bodycontainer {
+    width: 896px;
+    position: absolute;
+    left: 50%; margin-left: -468px;
+    padding: 20px;
+    height: 512px;
+    top: 50%; margin-top: -276px;
+    font-size: 16px;
+    background-color: #0C89AF;
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    box-shadow: inset 0 0 15px #000;
+    -webkit-box-shadow: inset 0 0 15px #000;
+    -moz-box-shadow: inset 0 0 15px #000;
+    background-image: -webkit-gradient(linear, left top, left bottom,
+        from(transparent), to(rgba(0,0,0,0.5)));
+}
+
+h2 {
+    font: bold 3em/2em "Megalopolis";
+    text-shadow: 0 1px 2px #FFF;
+}
+
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+
+#sign-up {
+    font: 1em/1.5em "Droid Serif";
+    text-align: left;
+    width: 384px;
+    padding: 20px 0;
+}
+#sign-up input {
+    width: 384px;
+}
+#sign-up input,
+#sign-up button {
+    font: 1em/1em "Droid Serif";
+    margin: 5px 0;
+}
+input:focus,
+button:focus {
+    outline: none;
+    box-shadow: 0 0 16px #def;
+    -webkit-box-shadow: 0 0 16px #def;
+    -moz-box-shadow: 0 0 16px #def;
+}
+input.error {
+    box-shadow: 0 0 16px #e00;
+    -webkit-box-shadow: 0 0 16px #e00;
+    -moz-box-shadow: 0 0 16px #e00;
+}
+#error {
+    color: #E00;
+}
+footer {
+    position: absolute; bottom: 0;
+    width: 100%;
+    font-family:"Megalopolis";
+    font-size: 12px;
+    color: #fff;
+    text-shadow: 0 0 4px #000;
+}
+.F-I {
+    font-family: "DOCK11 Heavy";
+    letter-spacing: 1px;
+    color: #000;
+    font-size: 1em;
+    text-transform: uppercase;
+}
+.F-I .F-I-ex {
+    color: #888;
+    font-size: 1.5em;
+    vertical-align:text-top;
+}

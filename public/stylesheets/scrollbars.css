@@ -15,3 +15,9 @@
 ::-webkit-scrollbar-thumb:horizontal:hover{
   background-color: rgba(0,0,0,0.50);
 }
+
+::selection,
+::-webkit-selection {
+    color: #FFF;
+    background-color: rgba(0,0,0,0.75);
+}

@@ -10,6 +10,21 @@ module.exports = function(db) {
     }
     var userAuth = {};
 
+    userAuth.exists = function(id, callback) {
+        id = (typeof(id)==='string') ? id : null;
+        if (!id) {
+            callback(false);
+            return;
+        }
+        db.get(id, function(err, doc) {
+            if (err) {
+                callback(false);
+            } else {
+                callback(true);
+            }
+        });
+    };
+
     userAuth.createUser = function(info, callback) {
         // info has username, password[, name, email]
 
@@ -24,13 +39,15 @@ module.exports = function(db) {
                 callback({status: 403, error: "User exists", detail:err}, null);
                 return;
             }
-            db.uuids(1, function(err, uuids) {
+            db.connection.uuids(1, function(err, uuids) {
                 if (err) {
                     callback({status: 500, error:"Could not create user", detail:err}, null);
                     return;
                 }
                 var salt = uuids[0];
                 var userDoc = {
+                    _id: id,
+                    id: id,
                     salt: salt,
                     password_sha: HASH(pw + salt),
                     name: info.name || id,
@@ -40,11 +57,13 @@ module.exports = function(db) {
                     friends: [],
                     type: "user"
                 };
+                console.log("Attempting to create new user: id: %s, doc:", id, userDoc);
                 db.save(id, userDoc, function(err, res) {
                     if (err) {
                         callback({status:500, error:"Could not create user", detail:err}, null);
                         return;
                     }
+                    console.log("New user created", res);
                     callback(null, res);
                 });
             });
@@ -82,7 +101,7 @@ module.exports = function(db) {
     userAuth.deleteUser = function(id, callback) {
         id = (typeof(id) === 'string') ? id : null;
         if (!id) {
-            callback({status:400, error:"Need username and password", detail:err}, null);
+            callback({status:400, error:"Need username (`id`)"}, null);
             return;
         }
         db.remove(id, function(err, res) {

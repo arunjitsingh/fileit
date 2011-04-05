@@ -1,5 +1,5 @@
 input {
-    cursor: pointer;
+    cursor: text;
     background-color: #FFF;
     color: #000;
     border-radius: 0.25em;
@@ -7,10 +7,11 @@ input {
     -moz-border-radius: 0.25em;
     padding: 0.4em 2em 0.4em 0.75em;
     border: 1px solid #CCC;
+    -webkit-transition: all 100ms ease-in-out;
+    -moz-transition: all 100ms ease-in-out;
 }
 
 input:hover {
-
     box-shadow: 0 0 16px #fff;
     -webkit-box-shadow: 0 0 16px #fff;
     -moz-box-shadow: 0 0 16px #fff;

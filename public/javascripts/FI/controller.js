@@ -102,7 +102,7 @@
     
     b.create = function(uri, callback) {
         FI.log("Creating", uri);
-        var resource = toBrowseURI(uri);
+        var resource = b.toURI(uri);
         var options = ajaxOptions({
             url: resource,
             type: POST,
@@ -114,7 +114,7 @@
     
     b.update = function(uri, data, callback) {
         FI.log("Updating", uri);
-        var resource = toBrowseURI(uri);
+        var resource = b.toURI(uri);
         var options = ajaxOptions({
             url: resource,
             type: PUT,

@@ -1,0 +1,36 @@
+@font-face {
+  font-family: 'DOCK11 Heavy';
+  src: local('☺'), url('../fonts/Dock11Heavy.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Droid Serif';
+  src: local('☺'), url('../fonts/DroidSerif-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Droid Serif Bold';
+  src: local('☺'), url('../fonts/DroidSerif-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Droid Serif Italic';
+  src: local('☺'), url('../fonts/DroidSerif-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Droid Serif BI';
+  src: local('☺'), url('../fonts/DroidSerif-BoldItalic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: bold italic;
+}
+@font-face {
+  font-family: 'Megalopolis';
+  src: local('☺'), url('../fonts/MEgalopolisExtra.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}

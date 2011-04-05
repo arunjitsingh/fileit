@@ -5,16 +5,6 @@
 $(document).ready(function() {
     
     
-    $.fn.centerBox = function() {
-        return this.each(function() {
-            var s = this.style;
-            if (s.position === 'absolute') {
-                s.left = (($(window).width() - $(this).width()) / 2) + "px";
-                s.top = (($(window).height() - $(this).height()) / 2) + "px";
-            }
-        });
-    };
-    
     if (window.self) {
         window._self = window.self;
     }
@@ -161,6 +151,18 @@ $(document).ready(function() {
     };
     self.browse.didCreate = function(response) {
         FI.log.apply(this, arguments);
+        self.currentColumn = self.currentSelection.first().parents('.column');
+        if (self.currentColumn.length === 0) {
+            self.columns.selectColumn(-1);
+        } else {
+            var vi = self.currentColumn.data().viewIndex;
+            self.columns.selectColumn(vi);
+        }
+        
+        var data = self.currentSelection.data(),
+            id = data.id;
+        BROWSER.fetch(id);
+        self.hideOverlay();
     };
     self.browse.didError = function(xhr, status, err) {
         FI.log.apply(this, arguments);
@@ -237,7 +239,6 @@ $(document).ready(function() {
         var form = elt.find("form[method=POST]");
         if (error) {
             elt.addClass("error");
-            elt.find(".infobar").addClass("error").text(error.error);
         }
         form.submit(function(evt) {
             evt.preventDefault(); // V.IMP
@@ -269,7 +270,6 @@ $(document).ready(function() {
                 options.ok();
             self.hideOverlay();
         });
-        elt.centerBox();
         overlay.show();
     };
     self.hideOverlay = function() {
@@ -296,15 +296,15 @@ $(document).ready(function() {
             //FI.APP.trigger('error',["Can't upload to a file!"]);
             return;
         }
-        var uploadBar = $("#upload-toolbar").clone(); //not clone(true)
-        $(".upload-to-dir", uploadBar).text();
+        var uploadBar = $("#upload-bar").clone(); //not clone(true)
+        $(".upload-to-dir", uploadBar).text("Upload to: "+id);
         var form = $("#upload-form", uploadBar);
         form.submit(function(evt) {
             evt.preventDefault(); // V.IMP!
             evt.stopPropagation();
             var fileName = form.find("input[name=file]").val();
             if (_.isEmpty(fileName) || (/no file selected/i).test(fileName)) {
-              //FI.APP.trigger("error", ["Can't Upload! Please select a file"]);
+              uploadBar.addClass('error');
               return false;
             }
             form.ajaxSubmit({
@@ -342,6 +342,20 @@ $(document).ready(function() {
         self.showOverlay(uploadBar);
     });
     
+    $("#newdir").click(function() {
+        if ($(this).hasClass('disabled')) return;
+        var data = self.currentSelection.data();
+        if (!data.isDirectory) return;
+        var id = data.id;
+        var elt = $("#newdir-bar").clone();
+        elt.find(".newdir-parent").text(id);
+        self.showOverlay(elt, {
+            ok:function() {
+                var dirname = elt.find("input[name=dirname]").val();
+                BROWSER.create(FI.pathJoin(id, dirname));
+            }
+        });
+    });
     
     $("#delete, #delete-file").click(function() {
         if ($(this).hasClass('disabled')) return;
