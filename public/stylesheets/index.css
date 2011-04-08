@@ -190,7 +190,7 @@ body {
     margin-top: 20px;
 }
 
-.dialog input {
+.dialog.error input {
     box-shadow: 0 0 16px #C00;
     -webkit-box-shadow: 0 0 16px #C00;
     -moz-box-shadow: 0 0 16px #C00;
@@ -213,7 +213,7 @@ body {
     text-shadow: 0 0 10px #000;
 }
 #overlay .ajax-working {
-    postion: absolute; bottom: 50px; left: 0;
+    position: absolute; bottom: 50px; left: 0;
     width: 100%; text-align: center;
 }
 
@@ -224,8 +224,27 @@ body {
 #overlay-container button {
     font: 16px "Droid Sans" bold;
 }
-#overlay-container .button-bar {
-    float: right;
+#overlay #open-container {
+    position: absolute; top: 0;bottom: 0;
+    height: auto;
+    width: 960px; left: 50%; margin-left: -480px;
+    overflow: auto;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #FFF;
+}
+#overlay #open-container iframe {
+    width: 100%; height: inherit;
+    min-height: 100%;
+}
+#overlay #open-container.video {
+    width: auto; left: 64px; margin-left:0;
+    right: 64px;
+    height: auto;
+    background-color: #000;
+}
+#overlay #open-container.video video {
+    width: 100%;
 }
 #overlay #close-overlay {
     position: absolute; left: 20px; top: 20px;
@@ -253,6 +272,42 @@ body {
     font-size: 16px;
     font-weight: bold;
 }
+#settings-bar {
+    position: absolute;
+    width: 512px; left: 50%;
+    margin-left: -256px;
+    height: 64px; top: 50%;
+    margin-top: -32px;
+    text-align: center;
+    vertical-align: middle;
+}
+#settings-bar button {
+    font: 24px "Megalopolis";
+}
+
+#error-bar {
+    position: absolute;
+    bottom: 10px;
+    width: 512px; left: 50%;
+    margin-left: -256px;
+    opacity: 0;
+    background-color: rgba(255, 16, 16, 0.85);
+    color: #FFF;
+    text-align: center;
+    z-index: 1000;
+    height: 16px;
+    padding: 16px;
+    border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    font-family: "Megalopolis";
+    -webkit-transition: opacity 2s ease-in-out;
+    -moz-transition: opacity 2s ease-in-out;
+}
+.showerror #error-bar {
+    opacity: 1;
+}
+
 .F-I {
     font-family: "DOCK11 Heavy";
     letter-spacing: 1px;

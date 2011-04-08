@@ -48,7 +48,7 @@ FI.parseMIME = function(mimeType) {
     var mimeRE = /^([a-z]+)(\/)([a-z0-9\-]+)/;
     var match = mimeType.match(mimeRE);
     if (match) return {type:match[1], subtype:match[3]};
-    else return {type: mimeType, subtype:mimeType};
+    else return null;
 };
 
 FI.Stack = Class({

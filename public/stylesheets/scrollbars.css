@@ -1,23 +1,32 @@
 ::-webkit-scrollbar,
 ::-webkit-scrollbar-track-piece,
-::-webkit-resizer {
+::-webkit-resizer,
+iframe::-webkit-scrollbar,
+iframe::-webkit-scrollbar-track-piece,
+iframe::-webkit-resizer {
     background-color: #FCFCFC;
     width: 10px;
     height: 10px;
 }
 ::-webkit-scrollbar-thumb:vertical,
-::-webkit-scrollbar-thumb:horizontal {
+::-webkit-scrollbar-thumb:horizontal,
+iframe::-webkit-scrollbar-thumb:vertical,
+iframe::-webkit-scrollbar-thumb:horizontal {
   -webkit-transition: all 100ms;
   background-color: rgba(0,0,0,0.15);
   border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:vertical:hover,
-::-webkit-scrollbar-thumb:horizontal:hover{
+::-webkit-scrollbar-thumb:horizontal:hover,
+iframe::-webkit-scrollbar-thumb:vertical:hover,
+iframe::-webkit-scrollbar-thumb:horizontal:hover {
   background-color: rgba(0,0,0,0.50);
 }
 
 ::selection,
-::-webkit-selection {
+::-webkit-selection,
+iframe::selection,
+iframe::-webkit-selection {
     color: #FFF;
     background-color: rgba(0,0,0,0.75);
 }

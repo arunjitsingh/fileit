@@ -27,6 +27,7 @@ $(document).ready(function() {
         .ajaxError(function(evt, xhr, sett, err) {
             if (xhr.status === 401) {
                 self.doLogin();
+                evt.stopPropagation();
             }
             self.$.trigger('error', [err, xhr]);
         })
@@ -46,9 +47,15 @@ $(document).ready(function() {
         "error": function(evt, err, obj) {
             debug.error(err, obj);
             self.$body.addClass("error");
+            if (obj.showError === true) {
+                var errstring = err + ": ";
+                errstring += obj.error;
+                $("#error-bar").text(errstring);
+                self.$body.addClass("showerror");
+            }
         },
         "success": function(evt, obj) {
-            self.$body.removeClass("error");
+            self.$body.removeClass("error").removeClass("showerror");
         }
     });
     
@@ -74,6 +81,37 @@ $(document).ready(function() {
             $(e).removeClass('disabled');
         });
         return self;
+    };
+    
+    
+    self.HTTPError = function(status) {
+        var STATUS = {
+            400: {status:"Bad Request", error:"There was an error with the request parameters"}, 
+            401: {status:"Unauthorized", error:"You are not logged in"}, 
+            403: {status:"Forbidden", error:"You do not have permission to access this resource"}, 
+            404: {status:"Not Found", error:"The requested resource was not found on the server"}, 
+            409: {status:"Conflict", error:"Resource conflict"}, 
+            500: {status:"Server Error", error:"There was a server error"}, 
+            501: {status:"Not Implemented", error:"The requested method is not implemented by the server"},
+            503: {status:"Service Unavailable", error:"There was an error completing the request"}
+        };
+        return STATUS[status];
+    };
+    
+    
+    var MediaTag = {
+        'audio': '<audio autoplay="false" controls></audio>',
+        'video': '<video autoplay="false" controls></video>'
+    };
+    self.tagForType = function(type) {
+        switch (type) {
+            case 'application': return ['<iframe>'];
+            case 'audio': 
+            case 'video': return [MediaTag[type]];
+            case 'image': return ['<img>'];
+            case 'text': return ['<iframe>'];
+            default: return ['<iframe>'];
+        }
     };
     
     var APP      = FI.APP;
@@ -116,7 +154,7 @@ $(document).ready(function() {
         list.updateContent(content);
         self.columns.newColumn().addSubview(list.view());
         self.columns.renderColumns();
-        $('#main').get(0).scrollLeft = 10000;
+        $('#main').animate({scrollLeft: 10000}, 1250);
     };
 
     var renderFile = function(file) {
@@ -125,7 +163,7 @@ $(document).ready(function() {
         FI.View.renderView(elt, {VIEW: APP.DetailsViewAttributes});
         self.columns.newColumn().addSubview(elt);
         self.columns.renderColumns();
-        $('#main').get(0).scrollLeft = 10000;
+        $('#main').animate({scrollLeft: 10000}, 1250);
     };
 
     self.browse.didDelete = function(response) {
@@ -166,6 +204,12 @@ $(document).ready(function() {
     };
     self.browse.didError = function(xhr, status, err) {
         FI.log.apply(this, arguments);
+        var httperr = self.HTTPError(xhr.status);
+        if (httperr) {
+            self.$.trigger("error", [httperr.status, {
+                showError: true,
+                error:httperr.error}]);
+        } 
     };
     
     self.doSelection = function(elt) {
@@ -178,7 +222,6 @@ $(document).ready(function() {
     
     self.cancelSelection = function(elt) {
         elt.removeClass('selected');
-        window.ELT = elt;
         if (elt.parents('#column-0').length === 1) {
             //FI.log('forcefully altering self.cS');
             self.currentSelection = $();
@@ -230,14 +273,17 @@ $(document).ready(function() {
         }
     };
     self.didNotAuthenticate = function(xhr, status, error) {
-        self.doLogin(JSON.parse(xhr.responseText));
+        if (xhr && xhr.responseText) self.doLogin(JSON.parse(xhr.responseText));
+        else self.doLogin(xhr);
     };
     
     
     self.doLogin = function(error) {
         var elt = $("#login").clone(); //not clone(true)
         var form = elt.find("form[method=POST]");
+        form.find("input").first().focus();
         if (error) {
+            //FI.log(error);
             elt.addClass("error");
         }
         form.submit(function(evt) {
@@ -251,8 +297,16 @@ $(document).ready(function() {
         }});
     };
     
+    self.doLogout = function() {
+        FI.log("Logging out");
+        APP.killSession(function() {
+            window.location = '/';
+        });
+    };
     
     self.showOverlay = function(elt, options) {
+        options = options || {cancel:function(){}};
+        //FI.log("overlay elt, options:", elt, options);
         elt = $(elt);
         var overlay = $("#overlay"),
             container = overlay.find("#overlay-container");
@@ -260,8 +314,7 @@ $(document).ready(function() {
         container.append(elt);
         $("#close-overlay, .cancel", overlay).click(function() {
             if ($(this).hasClass('disabled')) return;
-            if (options && options.cancel && typeof(options.cancel)==='function')
-                options.cancel();
+            options.cancel();
             self.hideOverlay();
         });
         $(".ok", overlay).click(function() {
@@ -303,7 +356,7 @@ $(document).ready(function() {
             evt.preventDefault(); // V.IMP!
             evt.stopPropagation();
             var fileName = form.find("input[name=file]").val();
-            if (_.isEmpty(fileName) || (/no file selected/i).test(fileName)) {
+            if (!fileName || fileName === '' || (/no file selected/i).test(fileName)) {
               uploadBar.addClass('error');
               return false;
             }
@@ -333,13 +386,18 @@ $(document).ready(function() {
                     }
                 },
                 error: function(xhr, error, status) {
-                    // Upload error
+                    if (xhr.status >= 500)
+                    self.$.trigger("error", ["Server Error", {
+                        showError: true,
+                        error: "There was an error uploading the file"}]);
                 },
                 clearForm: true
             });
             return false;
         });
-        self.showOverlay(uploadBar);
+        self.showOverlay(uploadBar, {
+            cancel: function() {}
+        });
     });
     
     $("#newdir").click(function() {
@@ -378,8 +436,45 @@ $(document).ready(function() {
         $("#hidden").get(0).appendChild(ifr);
     });
     
+    $("#open-file").click(function() {
+        var data = self.currentSelection.data();
+        var id = data.id;
+        var uri = FI.pathJoin(APP.kDownloadURI, id);
+        var mime = FI.parseMIME(data.type);
+        if (!mime) {
+            self.$.trigger('error', ["Can't preview file",{
+                showError: true,
+                error: "File type not supported"}]);
+            return;
+        }
+        var tags = self.tagForType(mime.type);
+        var cont = $("#open-container").clone();
+        var elt = $(tags[0]);
+        if (elt.is('video')) cont.addClass('video');
+        cont.append(elt);
+        elt.attr('src', uri);
+        self.showOverlay(cont, {cancel:function(){}});
+    });
     
-    self.doLogin();
+    $("#settings").click(function() {
+        if ($(this).hasClass('disabled')) return;
+        var elt = $("#settings-bar").clone();
+        elt.find("#logout").click(function() {
+            self.doLogout();
+        });
+        self.showOverlay(elt, {
+            cancel: function() {}
+        });
+    });
+    
+    APP.authenticated(function(response, status) {
+        if (status === 401) {
+            self.doLogin();
+        } else {
+            self.didAuthenticate(response);
+        }
+    });
+    //self.doLogin();
     //APP.authenticateUser('arunjitsingh', 'arunjitsingh');
     
     // DO NOT DO THIS! DEBUGGING ONLY

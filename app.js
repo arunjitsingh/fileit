@@ -101,6 +101,6 @@ require('./signup')(app);
 
 // Only listen on `$ node app.js`
 if (!module.parent) {
-    app.listen(app.PORT, app.HOST);
+    app.listen(app.PORT/*, app.HOST*/);
     console.log("Express server listening on port %d", app.address().port);
 }

@@ -30,7 +30,7 @@
       <li class="button disabled" id="links" title="My Links">
         <img src="images/fi-links-2.png" height="64">
       </li>
-      <li class="button disabled" id="settings" title="Preferences">
+      <li class="button" id="settings" title="Preferences">
         <img src="images/fi-settings.png" height="64">
       </li>
     </ul>
@@ -54,7 +54,7 @@
       <!-- THE MAIN BROWSER -->
     </div>
   </div>
-
+  <div id="error-bar"></div>
   <!-- OTHER ELEMENTS -->
   <div id="overlay">
     <span id="close-overlay" class="button cancel">x</span>
@@ -67,7 +67,7 @@
     <div id="login" class="dialog"><center>
       <form action="/auth" method="POST">
         <img src="images/fi-logo.png" alt="FILE!IT" height="256">
-        <h3>Log in to <span class="F-I">FILE<span class="F-I-ex">!</span>IT</span><h3>
+        <h3>Log in to <span class="F-I">FILE<span class="F-I-ex">!</span>IT</span></h3>
         <table>
           <tr>
             <td><input type="text" id="username" placeholder="Username" required></td>
@@ -78,6 +78,11 @@
       </form>
       <button type="button" class="cancel">Sign up</button>
     </center></div>
+    <!-- SETTINGS -->
+    <div id="settings-bar" class="dialog">
+      <button type="cancel" id="logout">Log Out</button>
+      <button type="button" class="cancel">Cancel</button>
+    </div>
     <!-- UPLOAD BAR -->
     <div id="upload-bar" class="dialog"><center>
       <form action="" method="POST" id="upload-form">
@@ -98,7 +103,7 @@
           <tr>
             <td><span class="newdir-parent"></span></td>
             <td><input type="text" name="dirname" placeholder="folder"></td>
-            <td><button class="ok">OK</button></button>
+            <td><button type="submit" class="ok">OK</button></button>
           </tr>
         </table>
       <button type="button" class="cancel">Cancel</button>
@@ -120,6 +125,10 @@
         <span class="button" id="delete-file" title="Delete File"><img src="images/fi-delete.png" height="64"></span>
         <span class="button" id="share-file" title="Share File"><img src="images/fi-share.png" height="64"></span>
       </center></div>
+    </div>
+    <!-- OPEN FILE -->
+    <div id="open-container">
+      
     </div>
   </div>
   

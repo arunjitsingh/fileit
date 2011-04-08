@@ -77,12 +77,12 @@ input.error {
     color: #E00;
 }
 footer {
-    position: absolute; bottom: 0;
+    position: absolute; bottom: 10px;
     width: 100%;
     font-family:"Megalopolis";
     font-size: 12px;
     color: #fff;
-    text-shadow: 0 0 4px #000;
+    text-shadow: 0 0 4px #888;
 }
 .F-I {
     font-family: "DOCK11 Heavy";

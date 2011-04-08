@@ -73,7 +73,27 @@
         
         $.ajax(options);
     };
-
+    
+    FI.APP.killSession = function(callback) {
+        var options = ajaxOptions({
+            url: FI.APP.authURI(),
+            type: DELETE,
+            success: callback || delegate.didKillSession,
+            error: callback || delegate.didNotKillSession
+        });
+        $.ajax(options);
+    };
+    
+    FI.APP.authenticated = function(callback) {
+        var options = ajaxOptions({
+            url: FI.APP.authURI(),
+            type: GET,
+            success: callback || delegate.didAuthenticate,
+            error: callback || delegate.didNotAuthenticate
+        });
+        $.ajax(options);
+    };
+    
     FI.APP.typeForMIME = function(mime) {
         var type = FI.parseMIME(mime).type;
         if (FI.APP.kSupportedMIMETypes.indexOf(type) >= 0) {
