@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 
 var timestamp = function() {
-    return new(Date).getTime();
+    return (new Date()).getTime();
 };
 
 var prepare = function(options) {
@@ -144,15 +144,15 @@ module.exports.del = function(uri, options, callback) {
             // move the file to trash before calling the callback.
             var RMCB = function(err) {
                 if (err) {
-                    var trashF = path.join( self.root,
-                                            self.trash || '.trash',
+                    var trashF = path.join( self.trash || path.join(self.root,'.trash'),
                                             uri.replace('/', '|'),
                                             timestamp());
                     
-                    fs.rename(filepath, trashF, function(err) {
-                        if (err) {
+                    fs.rename(filepath, trashF, function(err2) {
+                        if (err2) {
+                            console.log("RMCB/RENAME", err2);
                             callback({status:503, error:"Could not delete",
-                                detail:err, where:uri});
+                                detail:err2, where:uri});
                         } else {
                             callback(null);
                         }

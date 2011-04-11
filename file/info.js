@@ -2,7 +2,7 @@
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
-
+mime.default_type = null;
 var FF = require('./filter');
 
 // Keys used for stat'ing a path

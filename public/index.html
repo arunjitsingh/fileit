@@ -6,13 +6,12 @@
   <link rel="stylesheet" href="stylesheets/reset.css" media="all" type="text/css">
   <link rel="stylesheet" href="stylesheets/global.css" media="all" type="text/css">
   <link rel="stylesheet" href="stylesheets/index.css" media="all" type="text/css">
-  <script src="javascripts/vendor/jquery.js"></script>
-  <script src="javascripts/vendor/jquery.rest.js"></script>
-  <script src="javascripts/vendor/jquery.form.js"></script>
+  <script src="javascripts/vendor/jquery.all.js"></script>
   <script src="javascripts/vendor/underscore.js"></script>
   <script src="javascripts/vendor/oo.js"></script>
   <script src="javascripts/vendor/date.js"></script>
   <script src="javascripts/vendor/debug.min.js"></script>
+  <script src="javascripts/compat.js"></script>
   <script src="javascripts/FI/core.js"></script>
   <script src="javascripts/FI/controller.js"></script>
   <script src="javascripts/index.js"></script>
@@ -40,6 +39,9 @@
       </li>
       <li class="button disabled" id="delete" title="Delete File/Folder">
         <img src="images/fi-delete.png" height="64">
+      </li>
+      <li class="button disabled" id="rename" title="Rename File/Folder">
+        <img src="images/fi-rename.png" height="64">
       </li>
       <li class="button" id="upload" title="Upload to this Folder">
         <img src="images/fi-upload.png" height="64">
@@ -80,7 +82,7 @@
     </center></div>
     <!-- SETTINGS -->
     <div id="settings-bar" class="dialog">
-      <button type="cancel" id="logout">Log Out</button>
+      <button type="delete" id="logout">Log Out</button>
       <button type="button" class="cancel">Cancel</button>
     </div>
     <!-- UPLOAD BAR -->
@@ -102,12 +104,25 @@
         <table>
           <tr>
             <td><span class="newdir-parent"></span></td>
-            <td><input type="text" name="dirname" placeholder="folder"></td>
-            <td><button type="submit" class="ok">OK</button></button>
+            <td><input type="text" name="dirname" placeholder="folder" required></td>
+            <td><button type="submit" class="ok">OK</button></td>
           </tr>
         </table>
       <button type="button" class="cancel">Cancel</button>
     </center></div>
+    <!-- RENAME -->
+    <div id="rename-bar" class="dialog"><center>
+        <h3>Rename <span class="rename-file-id"></span></h3>
+        <table>
+          <tr>
+            <td><input type="text" name="newname" placeholder="New name" required></td>
+            <td><button type="submit" class="ok">OK</button></td>
+          </tr>
+        </table>
+      <button type="button" class="cancel">Cancel</button>
+    </center></div>
+    
+    
     <!-- FILE DETAILS -->
     <div id="details">
       <center>
@@ -123,12 +138,20 @@
         <span class="button" id="open-file" title="View File"><img src="images/fi-open.png" height="64"></span>
         <span class="button" id="download-file" title="Download File"><img src="images/fi-download.png" height="64"></span>
         <span class="button" id="delete-file" title="Delete File"><img src="images/fi-delete.png" height="64"></span>
-        <span class="button" id="share-file" title="Share File"><img src="images/fi-share.png" height="64"></span>
+        <span class="button disabled" id="share-file" title="Share File"><img src="images/fi-share.png" height="64"></span>
       </center></div>
     </div>
     <!-- OPEN FILE -->
     <div id="open-container">
       
+    </div>
+    <!-- DELETE FILE -->
+    <div id="delete-bar" class="dialog">
+      <center>
+        <h3>Delete "<span class="file-name"></span>"</h3>
+        <button type="delete" class="ok">Delete</button>
+        <button type="button" class="cancel">Cancel</button>
+      </center>
     </div>
   </div>
   

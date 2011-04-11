@@ -95,7 +95,8 @@
     };
     
     FI.APP.typeForMIME = function(mime) {
-        var type = FI.parseMIME(mime).type;
+        var type = FI.parseMIME(mime);
+        type = type && type.type;
         if (FI.APP.kSupportedMIMETypes.indexOf(type) >= 0) {
             return type;
         } else {
@@ -208,7 +209,10 @@
         }
         return Math.round(size)+" "+units[i];
     };
-    FI.APP.Transformers.Type = function(value) {
+    FI.APP.Transformers.TypeForMIME = function(value) {
+        return FI.APP.typeForMIME(value);
+    };
+    FI.APP.Transformers.ImageForMIME = function(value) {
         return 'images/' + FI.APP.typeForMIME(value) + '.png';
     };
 
@@ -221,12 +225,26 @@
                     'type': 'text',
                     transformedValue: FI.APP.Transformers.ID
                 },
-                'class': {
-                    'key': 'isDirectory',
-                    transformedValue: function(value) {
-                        return value?"DIR":"FILE";
+                // 'class': {
+                //     'key': 'isDirectory',
+                //     transformedValue: function(value) {
+                //         FI.log("FIAPPListItemTemplate::class#transformedValue", value);
+                //         return (value) ? "DIR" : "FILE";
+                //     }
+                // },
+                'class': [
+                    {
+                        'key': 'isDirectory',
+                        transformedValue: function(value) {
+                            //FI.log("FIAPPListItemTemplate::class#transformedValue", value);
+                            return (value) ? "DIR" : "";
+                        }
+                    }, {
+                        'key': 'type',
+                        transformedValue: FI.APP.Transformers.TypeForMIME
                     }
-                }
+                ]
+                
             }
         },
         ACTION: {
@@ -236,7 +254,7 @@
 
     FI.APP.DetailsViewAttributes = {
         '.file-name': {'content':{'key':'id', 'type':'text', transformedValue: FI.APP.Transformers.ID}},
-        '.file-type': {'content':{'key':'type', 'type':'img', transformedValue: FI.APP.Transformers.Type}},
+        '.file-type': {'content':{'key':'type', 'type':'img', transformedValue: FI.APP.Transformers.ImageForMIME}},
         '.file-size': {'content':{'key':'size', 'type':'text', transformedValue: FI.APP.Transformers.Size}},
         '.file-ctime': {'content':{'key':'ctime', 'type':'text', transformedValue: FI.APP.Transformers.Date}},
         '.file-mtime': {'content':{'key':'mtime', 'type':'text', transformedValue: FI.APP.Transformers.Date}}

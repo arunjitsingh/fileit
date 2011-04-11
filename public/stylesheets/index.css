@@ -121,21 +121,42 @@ body {
 .column .list li {
     list-style: none;
     padding:5px 5px 5px 26px;
+    cursor: pointer;
 }
 
 .column .list li.DIR {
     font-weight: bold;
     background: url("../images/fi-dir-2.png") no-repeat 2px;
 }
-
+/* File type icons */
+.column .list li {
+     background: url("../images/fi-i-FILE.png") no-repeat 2px;
+}
+.column .list li.application {
+    background: url("../images/fi-i-application.png") no-repeat 2px;
+}
+.column .list li.audio {
+    background: url("../images/fi-i-audio.png") no-repeat 2px;
+}
+.column .list li.image {
+    background: url("../images/fi-i-image.png") no-repeat 2px;
+}
+.column .list li.text {
+    background: url("../images/fi-i-text.png") no-repeat 2px;
+}
+.column .list li.video {
+    background: url("../images/fi-i-video.png") no-repeat 2px;
+}
+/* ******** */
 .column .list li:hover {
-    background-color: #FFD;
+    background-color: rgba(255,255,221,0.75);
     cursor: pointer;
 }
 
 .column .list li.selected {
     color: white;
-    background-color: #5070D0;
+    background-color: rgba(80,112,208,0.75);
+    cursor: pointer;
 }
 
 .dialog {
@@ -164,7 +185,9 @@ body {
     top: 50%; margin-top: -210px;
 }
 #upload-bar,
-#newdir-bar {
+#newdir-bar,
+#delete-bar,
+#rename-bar {
     background-color: #BD8427;
     width: 720px; height: 120px;
     left: 50%; margin-left: -360px;

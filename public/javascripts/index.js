@@ -126,7 +126,7 @@ $(document).ready(function() {
     self.columns = new(FI.ColumnView)("#browser", APP.ColumnViewOptions);
     
     //TODO: put this as an event
-    var updateHash = function(id) {
+    self.updateHash = function(id) {
         //FI.log("HASH", FI.APP.user.home, id);
         id = id || self.currentSelection.data().id;
         var uri = FI.pathJoin(USER.home.id, id);
@@ -186,6 +186,18 @@ $(document).ready(function() {
     
     self.browse.didUpdate = function(response) {
         FI.log.apply(this, arguments);
+        self.currentColumn = self.currentSelection.first().parents('.column');
+        if (self.currentColumn.length === 0) {
+            self.columns.selectColumn(-1);
+        } else {
+            var vi = self.currentColumn.data().viewIndex;
+            self.columns.selectColumn(vi);
+        }
+        
+        var data = self.currentSelection.data(),
+            id = data.id;
+        BROWSER.fetch(id);
+        self.hideOverlay();
     };
     self.browse.didCreate = function(response) {
         FI.log.apply(this, arguments);
@@ -236,11 +248,11 @@ $(document).ready(function() {
         if (elt.length < 1) {
             // nothing selected. select `#homedata`
             self.currentSelection = $("#homedata");
-            self.disable("#delete", "#download").enable("#upload", "#newdir");
+            self.disable("#delete", "#rename", "#download").enable("#upload", "#newdir");
         } else {
            elt.siblings('.selected').removeClass('selected');
            elt.addClass('selected');
-           self.enable("#delete");
+           self.enable("#delete", "#rename");
            if (!elt.data().isDirectory) {
                // not a directory
                self.enable("#download").disable("#upload", "#newdir");
@@ -250,7 +262,7 @@ $(document).ready(function() {
            }
         }
         var id = self.currentSelection.data().id;
-        updateHash(id);
+        self.updateHash(id);
     };
     
     // Authentication methods
@@ -265,6 +277,7 @@ $(document).ready(function() {
             self.currentSelection = $('#homedata').data(USER.home);
             BROWSER.fetch(USER.home.id);
             self.changeView("home");
+            self.updateHash('/');
             $("#main").show();
             self.hideOverlay();
         }
@@ -306,6 +319,7 @@ $(document).ready(function() {
     
     self.showOverlay = function(elt, options) {
         options = options || {cancel:function(){}};
+        options.cancel = options.cancel || function(){};
         //FI.log("overlay elt, options:", elt, options);
         elt = $(elt);
         var overlay = $("#overlay"),
@@ -328,6 +342,7 @@ $(document).ready(function() {
     self.hideOverlay = function() {
         var overlay = $("#overlay"),
             container = overlay.find("#overlay-container");
+        $(".cancel", overlay).unbind();
         container.empty();
         overlay.hide();
     };
@@ -419,12 +434,34 @@ $(document).ready(function() {
         if ($(this).hasClass('disabled')) return;
         var elt = self.currentSelection;
         var id = elt.data().id;
-        var del = confirm(id+" will be deleted!");
-        if (!del) return;
-        else {
-            BROWSER.remove(id);
-        }
+        var con = $("#delete-bar").clone();
+        con.find(".file-name").text(id);
+        self.showOverlay(con, {
+            ok: function() {
+                BROWSER.remove(id);
+            },
+            cancel: function() {}
+        });
     });
+    $("#rename, #rename-file").click(function() {
+        if ($(this).hasClass('disabled')) return;
+        var elt = self.currentSelection;
+        var id = elt.data().id;
+        var par = id.substring(0, id.lastIndexOf('/'));
+        var con = $("#rename-bar").clone();
+        con.find(".rename-file-id").text(id);
+        self.showOverlay(con, {
+            ok: function() {
+                var newname = con.find("input[name=newname]").val();
+                if (newname && newname !== '') {
+                    self.cancelSelection(self.currentSelection);
+                    BROWSER.update(id, {id:FI.pathJoin(par, newname)});
+                }
+            },
+            cancel: function() {}
+        });
+    });
+    
     $("#download, #download-file").click(function() {
         if ($(this).hasClass('disabled')) return;
         var id = $(".list .selected").last().data().id;
@@ -477,7 +514,7 @@ $(document).ready(function() {
     //self.doLogin();
     //APP.authenticateUser('arunjitsingh', 'arunjitsingh');
     
-    // DO NOT DO THIS! DEBUGGING ONLY
+    // NEVER DO THIS! DEBUGGING ONLY
     window.SELF = self;
     // Rebind window.self;
     window.self = window._self;

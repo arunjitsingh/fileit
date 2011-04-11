@@ -62,7 +62,8 @@ button[type=submit]:active {
   background: -moz-linear-gradient(-90deg,
       rgba(0, 255, 0, 0.8), rgba(77, 255, 77, 0.8));
 }
-button[type=cancel] {
+button[type=cancel],
+button[type=delete] {
   background: rgba(222, 0, 0, 0.8);
   color: #fff;
   background: -webkit-gradient(linear, left top, left bottom,
@@ -70,13 +71,15 @@ button[type=cancel] {
   background: -moz-linear-gradient(-90deg,
       rgba(255, 44, 44, 0.8), rgba(200, 0, 0, 0.8));
 }
-button[type=cancel]:hover {
+button[type=cancel]:hover,
+button[type=delete]:hover {
   background: -webkit-gradient(linear, left top, left bottom,
       from(rgba(255, 77, 77, 0.8)), to(rgba(255, 0, 0, 0.8)));
   background: -moz-linear-gradient(-90deg,
       rgba(255, 77, 77, 0.8), rgba(255, 0, 0, 0.8));
 }
-button[type=cancel]:active {
+button[type=cancel]:active,
+button[type=delete]:active {
   background: -webkit-gradient(linear, left top, left bottom,
       from(rgba(255, 0, 0, 0.8)), to(rgba(255, 77, 77, 0.8)));
   background: -moz-linear-gradient(-90deg,
