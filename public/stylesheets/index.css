@@ -94,6 +94,7 @@ body {
     width: auto;
     height: auto;
     overflow-x: scroll;
+    overflow-y: hidden;
     /*box-shadow: -1px 0 8px black;
         -webkit-box-shadow: -1px 0 8px black;*/
     z-index: 50;
@@ -166,9 +167,9 @@ body {
     border-radius: 0.5em;
     -webkit-border-radius: 0.5em;
     -moz-border-radius: 0.5em;
-    box-shadow: inset 0 0 5px #000;
-    -webkit-box-shadow: inset 0 0 5px #000;
-    -moz-box-shadow: inset 0 0 5px #000;
+    box-shadow: inset 0 0 15px #000;
+    -webkit-box-shadow: inset 0 0 15px #000;
+    -moz-box-shadow: inset 0 0 15px #000;
     border-top: 1px solid rgba(0,0,0,0.5);
     border-bottom: 1px solid rgba(255,255,255,0.5);
     background-image: -webkit-gradient(linear, left top, left bottom,
@@ -184,6 +185,16 @@ body {
     left: 50%; margin-left: -360px;
     top: 50%; margin-top: -210px;
 }
+#login input:after,
+#login button[type=submit]:after {
+    content: '';
+    height: 10px;
+    /*width: inherit;*/
+    margin-top: 12px;
+    border-radius: 0.25em;
+    border-bottom: 1px solid #eee;
+}
+        
 #upload-bar,
 #newdir-bar,
 #delete-bar,
@@ -193,6 +204,9 @@ body {
     left: 50%; margin-left: -360px;
     top: 50%; margin-top: -60px;
 }
+.dialog input {
+    color: #444;
+}
 .dialog input,
 .dialog button {
     margin:2px 5px;
@@ -200,9 +214,10 @@ body {
 }
 .dialog input:focus,
 .dialog button:focus {
-    box-shadow: 0 0 16px #2cf;
-    -webkit-box-shadow: 0 0 16px #2cf;
-    -moz-box-shadow: 0 0 16px #2cf;
+    color: #000;
+    box-shadow: 0 0 8px #2cf, 0 0 16px #fff;
+    -webkit-box-shadow: 0 0 8px #2cf, 0 0 16px #fff;
+    -moz-box-shadow: 0 0 8px #2cf, 0 0 16px #fff;
 }
 
 #upload-bar input:hover {
@@ -226,14 +241,14 @@ body {
     z-index: 10000;
     width: inherit;
     height: inherit;
-    background-color: rgba(0,0,0,0.90);
+    background-color: rgba(64,64,64,0.97);
     display:none;
 }
 #overlay h3 {
     margin:0; padding: 0;
     font: 24px/24px "Megalopolis";
     margin-bottom: 20px;
-    text-shadow: 0 0 10px #000;
+    text-shadow: 0 0 10px #222;
 }
 #overlay .ajax-working {
     position: absolute; bottom: 50px; left: 0;

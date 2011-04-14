@@ -1,4 +1,4 @@
-var USER_KEYS = ["_id", "id", "name", "servers", "shared", "friends"];
+var USER_KEYS = ["_id", "id", "name", "servers"];
 var parseDoc = function(doc) {
     var ret = {};
     USER_KEYS.forEach(function(key) {

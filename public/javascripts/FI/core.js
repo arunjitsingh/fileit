@@ -271,6 +271,11 @@
         },
 
         newColumn: function() {
+            if (this.currentColumn && this.currentColumn.view().children().length == 0) {
+                // have empty column, use that
+                return this.currentColumn;
+            }
+            
             this.currentLevel++;
             var nid = this.options.columnIdPrefix + this.currentLevel;
             var id = "#"+nid;
@@ -311,14 +316,21 @@
                     throw new Error("Cannot select this column!");
                 }
             }
+            if ((this.currentLevel > 0) && (this.currentLevel === idx+1)) {
+                this.currentColumn = this.columns.peek();
+                this.currentColumn.clear();
+                return this.currentColumn;
+            }
+            
             var i = this.currentLevel = (idx >= 0) ? idx : -1;
             var c = this.columns.count();
             var num = (c>i) ? c-i : c;
     //      FI.log("idx="+idx+",count="+c+",currentLevel="+i+",num="+num);
-            for (i = 0; i < num-1; ++i) {
+            
+            while (--num) {
                 var p = this.columns.pop();
                 if (p) {
-                    p.view().remove();
+                    p.view().hide().remove();
                 }
             }
             return this.currentColumn = this.columns.peek();

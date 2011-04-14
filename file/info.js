@@ -2,7 +2,12 @@
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
+
+// Change `mime.lookup` to return `null` by default. This
+// is handled by the application itself (customized!)
 mime.default_type = null;
+
+// File Filter. See [file/filter.js](./filter.html)
 var FF = require('./filter');
 
 // Keys used for stat'ing a path

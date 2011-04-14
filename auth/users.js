@@ -58,13 +58,13 @@ module.exports = function(db) {
                     type: "user"
                 };
                 console.log("Attempting to create new user: id: %s, doc:", id, userDoc);
-                db.save(id, userDoc, function(err, res) {
+                db.save(id, userDoc, function(err, dbres) {
                     if (err) {
                         callback({status:500, error:"Could not create user", detail:err}, null);
                         return;
                     }
-                    console.log("New user created", res);
-                    callback(null, res);
+                    console.log("New user created", dbres);
+                    callback(null, dbres);
                 });
             });
         });
@@ -104,13 +104,78 @@ module.exports = function(db) {
             callback({status:400, error:"Need username (`id`)"}, null);
             return;
         }
-        db.remove(id, function(err, res) {
+        db.remove(id, function(err, dbres) {
             if (err) {
                 callback({status:500, error:"User could not be deleted", detail:err}, null);
             } else {
-                callback(null, res);
+                callback(null, dbres);
             }
         });
     };
+    
+    userAuth.pushValue = function(id, key, value, callback) {
+        id = (typeof(id) === 'string') ? id : null;
+        if (!id) {
+            callback({status:400, error:"Need username (`id`)"}, null);
+            return;
+        }
+        db.get(id, function(err, doc) {
+            
+            if (err) {
+                callback({status:403, error:"User could not be accessed", detail:err}, null);
+            } else {
+                var k = doc[key];
+                if (k && k.length !== undefined) {
+                    k.push(link);
+                }
+                doc[key] = k;
+                db.save(doc, function(err, dbres) {
+                   if (err) {
+                       callback({status:403, error:"User could not be updated", detail:err}, null);
+                   } else {
+                       callback(null, dbres);
+                   }
+                });
+                
+            }
+            
+        });
+    };
+    
+    userAuth.has = function(id, key, value, callback) {
+        id = (typeof(id) === 'string') ? id : null;
+        if (!id) {
+            callback({status:400, error:"Need username (`id`)"}, null);
+            return;
+        }
+        db.get(id, function(err, doc) {
+            
+            if (err) {
+                callback(false);
+            } else {
+                if (doc[key]) {
+                    var val = doc[key];
+                    if (val === value) {
+                        callback(true);
+                    } else {
+                        if (typeof(val)==='object') {
+                            if (val.length !== undefined
+                             && val.indexOf!== undefined) {
+                                // Array
+                                callback((val.indexOf(value) > -1));
+                            } else {
+                                // Object
+                                callback(val[value]);
+                            }
+                        } else {
+                            callback(false);
+                        }
+                    }
+                }                
+            }
+            
+        });
+    };
+    
     return userAuth;
 };

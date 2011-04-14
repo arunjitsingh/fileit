@@ -41,29 +41,30 @@ app.configure('production', function(){
 
 // Server configuration via `server.json`. Required. if the file is
 // not available or has invalid JSON, server will **not** start.
-// Sample: 
-// `{
-//     "host":"127.0.0.1",
-//     "port":9501,
-//     "files":{
-//         "root":"/path/to/root",
-//         "trash":"/path/to/root/.trash",
-//         "users":"/path/to/root/users"
-//     }
-// }`
+// Sample:
+// 
+// > `
+// >    {
+// >       "host":"127.0.0.1",
+// >       "port":9501,
+// >       "files":{
+// >           "root":"/path/to/root",
+// >           "trash":"/path/to/root/.trash",
+// >           "users":"/path/to/root/users"
+// >       }
+// >   }
+// > `
 var settings = fs.readFileSync(__dirname + "/server.json");
-try {
-    settings = JSON.parse(settings);
-    settings.host = settings.host || '127.0.0.1';
-    if (!settings.port 
-     || !settings.files.root
-     || !settings.files.trash
-     || !settings.files.users) {
-         throw "Invalid server configuration!";
-     }
-} catch (err) {
-    throw err;
+
+settings = JSON.parse(settings);
+settings.host = settings.host || '127.0.0.1';
+if (!settings.port 
+ || !settings.files.root
+ || !settings.files.trash
+ || !settings.files.users) {
+     throw "Invalid server configuration!";
 }
+
 
 app.HOST  = settings.host;
 app.PORT  = settings.port;
@@ -74,7 +75,7 @@ app.tempDir = settings.files.temp;
 
 // Adding the database to `app`. `app` is passed around to the other
 // modules, which can then use `db`. Uppercasing `DB` to avoid any
-// possible conflicts.
+// possible conflicts. See [db/index.js](./db/index.html)
 app._DB = require('./db');
 
 // Routes. All application routing starts here
@@ -87,7 +88,7 @@ app._DB = require('./db');
 // For all routes `^/browse`. See [browse.js](./browse.html)
 require('./browse')(app);
 
-// For all routes `^/auth`. See [auth.js](./auth/index.html)
+// For all routes `^/auth`. See [auth/index.js](./auth/index.html)
 require('./auth')(app);
 
 // For all routes `^/download`. See [download.js](./download.html)
@@ -98,6 +99,9 @@ require('./upload')(app);
 
 // For all routes `^/signup`. See [signup.js](./signup.html)
 require('./signup')(app);
+
+// For all routes `^/shared?`. See [share.js](./share.html)
+require('./share')(app);
 
 // Only listen on `$ node app.js`
 if (!module.parent) {

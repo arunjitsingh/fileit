@@ -64,9 +64,9 @@ h2 {
 input:focus,
 button:focus {
     outline: none;
-    box-shadow: 0 0 16px #def;
-    -webkit-box-shadow: 0 0 16px #def;
-    -moz-box-shadow: 0 0 16px #def;
+    box-shadow: 0 0 12px #def, 0 0 16px #fff;
+    -webkit-box-shadow: 0 0 12px #def, 0 0 16px #fff;
+    -moz-box-shadow: 0 0 12px #def, 0 0 16px #fff;
 }
 input.error {
     box-shadow: 0 0 16px #e00;
@@ -82,7 +82,7 @@ footer {
     font-family:"Megalopolis";
     font-size: 12px;
     color: #fff;
-    text-shadow: 0 0 4px #888;
+    text-shadow: 0 0 8px #222;
 }
 .F-I {
     font-family: "DOCK11 Heavy";

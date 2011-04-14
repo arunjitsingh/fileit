@@ -13,7 +13,8 @@ module.exports = function(app) {
     var BROWSE = '/browse/:uri(*)?';
     var userDir = app.userDir;
     
-    // (GET) file information for a URI
+    // (GET) file information for a URI.
+    // Uses `file/info`. See [file/info.js](./file/info.html)
     app.get(BROWSE, function(request, response) {
         response.contentType('json');
         
@@ -40,6 +41,7 @@ module.exports = function(app) {
     
     
     // Create a new directory at URI (POST)
+    // Uses `file/ops`. See [file/info.js](./file/ops.html)
     app.post(BROWSE, function(request, response) {
         response.contentType('json');
         
@@ -66,6 +68,7 @@ module.exports = function(app) {
     });
     
     // Rename a file/directory at URI (PUT)
+    // Uses `file/ops`. See [file/info.js](./file/ops.html)
     app.put(BROWSE, function(request, response) {
         response.contentType('json');
         
@@ -101,6 +104,8 @@ module.exports = function(app) {
         });
     });
     
+    // Delete file/directory at URI
+    // Uses `file/ops`. See [file/info.js](./file/ops.html)
     app.del(BROWSE, function(request, response) {
         response.contentType('json');
         

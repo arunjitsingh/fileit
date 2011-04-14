@@ -68,6 +68,11 @@ $(document).ready(function() {
         }
     };
     
+    self.$main = $("#main");
+    self.updateMain = function() {
+        self.$main.animate({scrollLeft:self.$main.width()}, {duration: 250, queue: false});
+    };
+    
     self.disable = function() {
         var args = [].slice.call(arguments);
         args.forEach(function(e) {
@@ -133,8 +138,6 @@ $(document).ready(function() {
         window.location.hash = uri;
     };
     
-    
-    
     // Some delegate methods for BROWSER
     self.browse.didFetch = function(response) {
         if (response && response.ok) {
@@ -154,7 +157,9 @@ $(document).ready(function() {
         list.updateContent(content);
         self.columns.newColumn().addSubview(list.view());
         self.columns.renderColumns();
-        $('#main').animate({scrollLeft: 10000}, 1250);
+        
+        //self.$main.animate({scrollLeft:10000}, 1250);
+        self.updateMain();
     };
 
     var renderFile = function(file) {
@@ -163,7 +168,9 @@ $(document).ready(function() {
         FI.View.renderView(elt, {VIEW: APP.DetailsViewAttributes});
         self.columns.newColumn().addSubview(elt);
         self.columns.renderColumns();
-        $('#main').animate({scrollLeft: 10000}, 1250);
+        
+        //self.$main.animate({scrollLeft:10000}, 1250);
+        self.updateMain();
     };
 
     self.browse.didDelete = function(response) {
@@ -233,6 +240,8 @@ $(document).ready(function() {
     };
     
     self.cancelSelection = function(elt) {
+        self.currentSelection 
+            && self.currentSelection.removeClass('selected');
         elt.removeClass('selected');
         if (elt.parents('#column-0').length === 1) {
             //FI.log('forcefully altering self.cS');
@@ -244,25 +253,32 @@ $(document).ready(function() {
     };
     
     self.selectionChanged = function() {
-        var elt = self.currentSelection;
-        if (elt.length < 1) {
-            // nothing selected. select `#homedata`
-            self.currentSelection = $("#homedata");
-            self.disable("#delete", "#rename", "#download").enable("#upload", "#newdir");
-        } else {
-           elt.siblings('.selected').removeClass('selected');
-           elt.addClass('selected');
-           self.enable("#delete", "#rename");
-           if (!elt.data().isDirectory) {
-               // not a directory
-               self.enable("#download").disable("#upload", "#newdir");
-           } else {
-               // directory
-               self.disable("#download").enable("#upload", "#newdir");
-           }
-        }
-        var id = self.currentSelection.data().id;
-        self.updateHash(id);
+        setTimeout(function() {
+            var elt = self.currentSelection;
+            //FI.log("selectionChanged > ", elt.get(0));
+            if (elt.length < 1) {
+                // nothing selected. select `#homedata`
+                self.currentSelection = $("#homedata");
+                self.disable("#delete", "#rename", "#download")
+                    .enable("#upload", "#newdir");
+            } else {
+               elt.siblings('.selected').removeClass('selected');
+               elt.addClass('selected');
+               self.enable("#delete", "#rename");
+
+               if (!elt.data().isDirectory) {
+                   // not a directory
+                   self.enable("#download")
+                       .disable("#upload", "#newdir");
+               } else {
+                   // directory
+                   self.disable("#download")
+                       .enable("#upload", "#newdir");
+               }
+            }
+            var id = self.currentSelection.data().id;
+            self.updateHash(id);
+        }, 50);
     };
     
     // Authentication methods

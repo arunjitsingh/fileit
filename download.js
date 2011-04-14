@@ -36,10 +36,12 @@ module.exports = function(app) {
             } else {
                 if (dl) {
                     // Send the file as a download (will open "Download"/etc panels)
+                    console.log("Attaching file ", filepath);
                     response.download(filepath);
                 } else {
                     // Simply send the file like a static resource. Useful for `src`
                     // attributes of HTML elements
+                    console.log("Sending file ", filepath);
                     response.sendfile(filepath);
                 }
             }

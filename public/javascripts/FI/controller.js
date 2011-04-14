@@ -195,8 +195,10 @@
         return value.substring(value.lastIndexOf('/')+1);
     };
     FI.APP.Transformers.Date = function(value) {
-        var date =  new(Date)(value);
+        function pad(n) {return (n < 10) ? "0"+n : n;}
+        var date =  new(Date)(Date.parse(value));
         str = date.getMonthName() + " " + date.getDate() + " " + date.getFullYear();
+        str += " " + pad(date.getHours()) + ":" + pad(date.getMinutes());
         return str;
     };
     FI.APP.Transformers.Size = function(value) {

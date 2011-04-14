@@ -4,8 +4,7 @@
   <title>Sign up for FILE!IT</title>
   <link rel="stylesheet" href="stylesheets/reset.css">
   <link rel="stylesheet" href="stylesheets/signup.css">
-  <script src="javascripts/vendor/jquery.js"></script>
-  <script src="javascripts/vendor/jquery.form.js"></script>
+  <script src="javascripts/vendor/jquery.all.js"></script>
 </head>
 <body>
   <div id="bodybg"></div>
@@ -37,10 +36,10 @@
             <td></td>
             <td><button type="submit">Sign up</button></td>
           </tr>
-          <!-- <tr>
+          <tr>
             <td></td>
-            <td><button type="button" class="cancel">Log In</button></td>
-          </tr> -->
+            <td>Have an account? <button type="button" class="cancel">Log In</button></td>
+          </tr>
           <tr>
             <td></td>
             <td><img src="images/loader.gif" id="loader" style="display:none"></td>
@@ -81,7 +80,10 @@ $(document).ready(function() {
       $error.text("");
       $(this).removeClass('error');
     });
-  
+  form.find("button.cancel").click(function() {
+    console.log(this);
+    window.location = "/#/";
+  });
   form.ajaxForm({
     dataType: 'json',
     success: function(res) {
