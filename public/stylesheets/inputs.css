@@ -1,4 +1,4 @@
-input {
+.theme input {
     cursor: text;
     background-color: #FFF;
     color: #000;
@@ -13,28 +13,28 @@ input {
     -webkit-transition: all 100ms ease-in-out;
     -moz-transition: all 100ms ease-in-out;
 }
-input[type=submit],
-input[type=file] {
+.theme input[type=submit],
+.theme input[type=file] {
     cursor: pointer;
 }
-input:hover {
+.theme input:hover {
     box-shadow: 0 0 16px #fff;
     -webkit-box-shadow: 0 0 16px #fff;
     -moz-box-shadow: 0 0 16px #fff;
 }
-input:focus {
+.theme input:focus {
     outline: none;
     box-shadow: 0 0 12px #0af, 0 0 16px #fff;
     -webkit-box-shadow: 0 0 12px #0af, 0 0 16px #fff;
     -moz-box-shadow: 0 0 12px #0af, 0 0 16px #fff;
 }
-input.disabled,
-input:disabled {
+.theme input.disabled,
+.theme input:disabled {
     background-color: #888;
     border-color: #888;
 }
-input.disabled:hover,
-input:disabled:hover {
+.theme input.disabled:hover,
+.theme input:disabled:hover {
     cursor: default;
     background-color: rgba(44, 44, 44, 0.8);
 }

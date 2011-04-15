@@ -227,13 +227,12 @@
                     'type': 'text',
                     transformedValue: FI.APP.Transformers.ID
                 },
-                // 'class': {
-                //     'key': 'isDirectory',
-                //     transformedValue: function(value) {
-                //         FI.log("FIAPPListItemTemplate::class#transformedValue", value);
-                //         return (value) ? "DIR" : "FILE";
-                //     }
-                // },
+                'data-id': {
+                    'key': 'id'
+                },
+                'data-type': {
+                    'key': 'type'
+                },
                 'class': [
                     {
                         'key': 'isDirectory',
@@ -253,13 +252,19 @@
             click: FI.APP.fFileClickHandler
         }
     };
-
+    
+    var fTransformTypeDisability = function(value) {
+        var mime = FI.parseMIME(value);
+        return (mime && mime.type) ? "" : "disabled";
+    };
+    
     FI.APP.DetailsViewAttributes = {
         '.file-name': {'content':{'key':'id', 'type':'text', transformedValue: FI.APP.Transformers.ID}},
         '.file-type': {'content':{'key':'type', 'type':'img', transformedValue: FI.APP.Transformers.ImageForMIME}},
         '.file-size': {'content':{'key':'size', 'type':'text', transformedValue: FI.APP.Transformers.Size}},
         '.file-ctime': {'content':{'key':'ctime', 'type':'text', transformedValue: FI.APP.Transformers.Date}},
-        '.file-mtime': {'content':{'key':'mtime', 'type':'text', transformedValue: FI.APP.Transformers.Date}}
+        '.file-mtime': {'content':{'key':'mtime', 'type':'text', transformedValue: FI.APP.Transformers.Date}},
+        '#open-file': {'class':{key:'type', transformedValue: fTransformTypeDisability}}
     };
 
     FI.APP.columnWidth = 325;

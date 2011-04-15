@@ -52,8 +52,14 @@
     </ul>
   </div>
   <div id="main">
-    <div id="browser">
+    <div id="browser-view">
       <!-- THE MAIN BROWSER -->
+    </div>
+    <div id="shared-view">
+      <!-- THE SHARED LISTING -->
+    </div>
+    <div id="links-view">
+      <!-- THE LINKS LISTING -->
     </div>
   </div>
   <div id="error-bar"></div>
@@ -66,7 +72,7 @@
   
   <div id="template-elements" style="display:none">
     <!-- LOGIN -->
-    <div id="login" class="dialog"><center>
+    <div id="login" class="dialog theme"><center>
       <form action="/auth" method="POST">
         <img id="fi-logo-big" src="images/fi-logo-d.png" alt="FILE!IT" height="256">
         <h3>Log in to <span class="F-I">FILE<span class="F-I-ex">!</span>IT</span></h3>
@@ -81,12 +87,12 @@
       <button type="button" class="cancel">Sign up</button>
     </center></div>
     <!-- SETTINGS -->
-    <div id="settings-bar" class="dialog">
+    <div id="settings-bar" class="dialog theme">
       <button type="delete" id="logout">Log Out</button>
       <button type="button" class="cancel">Cancel</button>
     </div>
     <!-- UPLOAD BAR -->
-    <div id="upload-bar" class="dialog"><center>
+    <div id="upload-bar" class="dialog theme"><center>
       <form action="" method="POST" id="upload-form">
         <h3 class="upload-to-dir"></h3>
         <table>
@@ -99,7 +105,7 @@
       <button type="button" class="cancel">Cancel</button>
     </center></div>
     <!-- NEW DIR -->
-    <div id="newdir-bar" class="dialog"><center>
+    <div id="newdir-bar" class="dialog theme"><center>
         <h3>Create a new folder in <span class="newdir-parent"></span></h3>
         <table>
           <tr>
@@ -111,7 +117,7 @@
       <button type="button" class="cancel">Cancel</button>
     </center></div>
     <!-- RENAME -->
-    <div id="rename-bar" class="dialog"><center>
+    <div id="rename-bar" class="dialog theme"><center>
         <h3>Rename <span class="rename-file-id"></span></h3>
         <table>
           <tr>
@@ -146,7 +152,7 @@
       
     </div>
     <!-- DELETE FILE -->
-    <div id="delete-bar" class="dialog">
+    <div id="delete-bar" class="dialog theme">
       <center>
         <h3>Delete "<span class="file-name"></span>"</h3>
         <button type="delete" class="ok">Delete</button>

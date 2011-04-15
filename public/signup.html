@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="stylesheets/signup.css">
   <script src="javascripts/vendor/jquery.all.js"></script>
 </head>
-<body>
+<body class="theme">
   <div id="bodybg"></div>
   <div id="bodycontainer">
     <div id="logo" class="left">
@@ -16,6 +16,10 @@
       <h2>Sign up</h2>
       <form action="/signup" method="POST">
         <table>
+          <tr>
+            <td><label for="name"></label></td>
+            <td><input type="text" name="name" placeholder="Full Name" required></td>
+          </tr>
           <tr>
             <td><label for="username"></label></td>
             <td><input type="text" name="username" placeholder="Username" required></td>
@@ -27,10 +31,6 @@
           <tr>
             <td><label for="email"></label></td>
             <td><input type="email" name="email" placeholder="Email" required></td>
-          </tr>
-          <tr>
-            <td><label for="name"></label></td>
-            <td><input type="text" name="name" placeholder="Name" required></td>
           </tr>
           <tr>
             <td></td>

@@ -126,7 +126,7 @@ module.exports = function(db) {
             } else {
                 var k = doc[key];
                 if (k && k.length !== undefined) {
-                    k.push(link);
+                    k.push(value);
                 }
                 doc[key] = k;
                 db.save(doc, function(err, dbres) {
@@ -137,6 +137,23 @@ module.exports = function(db) {
                    }
                 });
                 
+            }
+            
+        });
+    };
+    
+    userAuth.getUser = function(id, callback) {
+        id = (typeof(id) === 'string') ? id : null;
+        if (!id) {
+            callback({status:400, error:"Need username (`id`)"}, null);
+            return;
+        }
+        db.get(id, function(err, doc) {
+            
+            if (err) {
+                callback({status:403, error:"User could not be accessed", detail:err}, null);
+            } else {
+                callback(null, doc);                
             }
             
         });

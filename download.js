@@ -13,7 +13,7 @@ module.exports = function(app) {
     // All requests to `/download` will be received here. This will send
     // a file specified by the `uri` to the client
     app.all(DOWNLOAD, function(request, response) {
-        var uri = request.param('uri') || '/';
+        var uri = request.param('uri', '/');
         var dl  = request.param('download') ? true : false;
         // Authenticate user
         var user = auth(request);

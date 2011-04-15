@@ -58,12 +58,19 @@ var settings = fs.readFileSync(__dirname + "/server.json");
 
 settings = JSON.parse(settings);
 settings.host = settings.host || '127.0.0.1';
-if (!settings.port 
- || !settings.files.root
- || !settings.files.trash
- || !settings.files.users) {
-     throw "Invalid server configuration!";
+try {
+    if (!settings.port 
+     || !settings.files.root
+     || !settings.files.trash
+     || !settings.files.users
+     || !settings.db.name
+     || !settings.db.defaults) {
+         throw "Invalid server configuration!";
+    }
+} catch(err) {
+    throw err;
 }
+
 
 
 app.HOST  = settings.host;
@@ -73,10 +80,11 @@ app.trashDir = settings.files.trash;
 app.userDir = settings.files.users;
 app.tempDir = settings.files.temp;
 
+var dbsettings = settings.db;
 // Adding the database to `app`. `app` is passed around to the other
 // modules, which can then use `db`. Uppercasing `DB` to avoid any
-// possible conflicts. See [db/index.js](./db/index.html)
-app._DB = require('./db');
+// possible conflicts. See [db.js](./db.html)
+app._DB = require('./db')(dbsettings);
 
 // Routes. All application routing starts here
 // No need to route '/'. Express will automatically try
@@ -106,5 +114,5 @@ require('./share')(app);
 // Only listen on `$ node app.js`
 if (!module.parent) {
     app.listen(app.PORT/*, app.HOST*/);
-    console.log("Express server listening on port %d", app.address().port);
+    console.log("FILE!IT server listening on port %d", app.address().port);
 }

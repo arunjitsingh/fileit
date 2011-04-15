@@ -6,5 +6,19 @@
         "trash":"/Volumes/FILEIT/root/.trash",
         "users":"/Volumes/FILEIT/root/users",
         "temp":"/Volumes/FILEIT/root/.tmp"
+    },
+    "db": {
+        "name": "fi-users",
+        "defaults": {
+            "host": "127.0.0.1",
+            "port": 5984,
+            "options": {}
+        },
+        "fallback": {
+            "host": "arunjitsingh.couchone.com",
+            "port": 80,
+            "auth": {"username":"fi", "password":"fi"},
+            "options": {}
+        }
     }
 }

@@ -60,7 +60,9 @@ module.exports = function(app) {
     app.del(AUTH, function(request, response) {
         response.contentType('json');
         // Logout
+        user = auth(request);
         request.session.destroy();
+        console.log("User '%s' logged out", user.id||user._id);
         response.send(json({ok:true}), 200);
     });
 };

@@ -101,7 +101,7 @@ body {
     -webkit-user-select: none;
 }
 
-#browser {
+#browser-view {
     background-color:#FFF;
     height: 100%;
     width: inherit;
@@ -263,9 +263,11 @@ body {
     font: 16px "Droid Sans" bold;
 }
 #overlay #open-container {
-    position: absolute; top: 0;bottom: 0;
+    position: absolute; 
+    left: 64px; right: 64px;
+    width: auto;
+    top: 0; bottom: 0;
     height: auto;
-    width: 960px; left: 50%; margin-left: -480px;
     overflow: auto;
     text-align: center;
     vertical-align: middle;
@@ -273,16 +275,25 @@ body {
 }
 #overlay #open-container iframe {
     width: 100%; height: inherit;
-    min-height: 100%;
+    min-height: 99%;
 }
-#overlay #open-container.video {
-    width: auto; left: 64px; margin-left:0;
-    right: 64px;
-    height: auto;
+#overlay #open-container.video video,
+#overlay #open-container.video audio {
+    max-width: 99%;
+    max-height: 99%;
     background-color: #000;
 }
-#overlay #open-container.video video {
-    width: 100%;
+#overlay #open-container.video {
+    background-image: url('../images/fi-video-big.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+#overlay #open-container.audio {
+    background-image: url('../images/fi-audio-big.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
 }
 #overlay #close-overlay {
     position: absolute; left: 20px; top: 20px;

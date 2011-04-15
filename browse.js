@@ -18,7 +18,7 @@ module.exports = function(app) {
     app.get(BROWSE, function(request, response) {
         response.contentType('json');
         
-        var uri = request.param('uri') || '/';
+        var uri = request.param('uri', '/');
         // Authenticate user
         var user = auth(request);
         if (!user) {
@@ -45,7 +45,7 @@ module.exports = function(app) {
     app.post(BROWSE, function(request, response) {
         response.contentType('json');
         
-        var uri = request.param('uri') || '';
+        var uri = request.param('uri', '/');
         // Authenticate user
         var user = auth(request);
         if (!user) {
@@ -72,7 +72,7 @@ module.exports = function(app) {
     app.put(BROWSE, function(request, response) {
         response.contentType('json');
         
-        var uri = request.param('uri') || '/';
+        var uri = request.param('uri', '/');
         var to = request.body.id || request.query.id;
         // User did not send a new file name (as `id`). Server expects
         // either JSON encoded body: `{"id":"new/file/path"}`
@@ -109,7 +109,7 @@ module.exports = function(app) {
     app.del(BROWSE, function(request, response) {
         response.contentType('json');
         
-        var uri = request.param('uri') || '/';
+        var uri = request.param('uri', '/');
         // Authenticate user
         var user = auth(request);
         if (!user) {

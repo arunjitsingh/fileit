@@ -1,7 +1,6 @@
 var auth = require('./auth/req');
 var path = require('path');
 var json = JSON.stringify;
-
 module.exports = function(app) {
     
     var USERS = require('./auth/users')(app._DB);
@@ -14,16 +13,24 @@ module.exports = function(app) {
     app.get('/shared', function(request, response) {
         
         var user = auth(request);
-        if (!user) {
+        if (!user || !(user.id || user._id)) {
             response.send(json({error: "You are not logged in!"}), 401);
             return;
         }
-        if (user.shared) {
-            var shared = user.shared;
-            response.send(json({ok: true, content:shared}), 200);
-        } else {
-            response.send(json({error:"Not found"}), 404);
-        }
+        var id = user.id || user._id;
+        
+        USERS.getUser(id, function(err, userDoc) {
+            if (err) {
+                response.send(json({error:err.error}), err.status);
+                return;
+            }
+            auth(request, userDoc);
+            if (userDoc[kShared]) {
+                response.send(json({ok: true, content: userDoc[kShared]}), 200);
+            } else {
+                response.send(json({error:"Not found"}), 404);
+            }
+        });
         
     });
     
@@ -36,12 +43,12 @@ module.exports = function(app) {
             return;
         }
         var uid = user.id || user. _id;
-        var id = request.param('id') || null;
+        var id = request.param('id', null);
         if (!id) {
             response.send(json({error:"Invalid request. User ID not sent"}), 400);
             return;
         }
-        var uri = request.param('uri');
+        var uri = request.param('uri', null);
         if (!uri) {
             response.send(json({error:"Invalid request. No URI sent"}), 400);
             return;
@@ -59,7 +66,7 @@ module.exports = function(app) {
         
     });
     
-    
+    // Download shared file for
     app.get('/-s/:id/:uri(*)', function(request, response) {
         var user = auth(request);
         if (!user || !(user.id || user._id)) {
@@ -67,12 +74,12 @@ module.exports = function(app) {
             return;
         }
         var uid = user.id || user. _id;
-        var id = request.param('id') || null;
+        var id = request.param('id', null);
         if (!id) {
             response.send(json({error:"Invalid request. User ID not sent"}), 400);
             return;
         }
-        var uri = request.param('uri');
+        var uri = request.param('uri', null);
         if (!uri) {
             response.send(json({error:"Invalid request. No URI sent"}), 400);
             return;
@@ -105,7 +112,7 @@ module.exports = function(app) {
             return;
         }
         var id = user.id || user. _id;
-        var uri = request.param('uri');
+        var uri = request.param('uri', null);
         if (!uri) {
             response.send(json({error:"Invalid request. No URI sent"}), 400);
             return;
@@ -122,13 +129,14 @@ module.exports = function(app) {
         
     });
     
+    // CDN get
     app.get('/-/:id/:uri(*)', function(request, response) {
-        var id = request.param('id') || null;
+        var id = request.param('id', null);
         if (!id) {
             response.send(json({error:"Invalid request. User ID not sent"}), 400);
             return;
         }
-        var uri = request.param('uri');
+        var uri = request.param('uri', null);
         if (!uri) {
             response.send(json({error:"Invalid request. No URI sent"}), 400);
             return;
@@ -149,5 +157,56 @@ module.exports = function(app) {
                 }
             }
         });
+    });
+    
+    
+    
+    // Friends    
+    app.get('/friends', function(request, response) {
+        
+        var user = auth(request);
+        if (!user || !(user.id || user._id)) {
+            response.send(json({error: "You are not logged in!"}), 401);
+            return;
+        }
+        var id = user.id || user._id;
+        
+        USERS.getUser(id, function(err, userDoc) {
+            if (err) {
+                response.send(json({error:err.error}), err.status);
+                return;
+            }
+            auth(request, userDoc);
+            if (userDoc[kFriends]) {
+                response.send(json({ok: true, content: userDoc[kFriends]}), 200);
+            } else {
+                response.send(json({error:"Not found"}), 404);
+            }
+        });
+        
+    });
+    
+    app.post('/friends/:id', function(request, response) {
+        
+        var user = auth(request);
+        if (!user || !(user.id || user._id)) {
+            response.send(json({error: "You are not logged in!"}), 401);
+            return;
+        }
+        var uid = user.id || user. _id;
+        var id = request.param('id', null);
+        if (!id) {
+            response.send(json({error:"Invalid request. User ID not sent"}), 400);
+            return;
+        }
+        
+        USERS.pushValue(uid, kFriends, id, function(err, dbres) {
+            if (err) {
+                response.send(json({error:err.error}), err.status);
+            } else {
+                response.send(json({ok:true}), 200);
+            }
+        });
+        
     });
 };

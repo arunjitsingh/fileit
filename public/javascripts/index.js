@@ -105,13 +105,13 @@ $(document).ready(function() {
     
     
     var MediaTag = {
-        'audio': '<audio autoplay="false" controls></audio>',
-        'video': '<video autoplay="false" controls></video>'
+        'audio': '<audio autoplay controls></audio>',
+        'video': '<video autoplay controls></video>'
     };
     self.tagForType = function(type) {
         switch (type) {
             case 'application': return ['<iframe>'];
-            case 'audio': 
+            case 'audio': /*fallthrough*/
             case 'video': return [MediaTag[type]];
             case 'image': return ['<img>'];
             case 'text': return ['<iframe>'];
@@ -128,7 +128,7 @@ $(document).ready(function() {
         return FI.pathJoin(APP.kServerRoot, APP.kUploadURI, id);
     };
     
-    self.columns = new(FI.ColumnView)("#browser", APP.ColumnViewOptions);
+    self.columns = new(FI.ColumnView)("#browser-view", APP.ColumnViewOptions);
     
     //TODO: put this as an event
     self.updateHash = function(id) {
@@ -490,6 +490,7 @@ $(document).ready(function() {
     });
     
     $("#open-file").click(function() {
+        if ($(this).hasClass('disabled')) return;
         var data = self.currentSelection.data();
         var id = data.id;
         var uri = FI.pathJoin(APP.kDownloadURI, id);
@@ -504,6 +505,7 @@ $(document).ready(function() {
         var cont = $("#open-container").clone();
         var elt = $(tags[0]);
         if (elt.is('video')) cont.addClass('video');
+        else if (elt.is('audio')) cont.addClass('audio');
         cont.append(elt);
         elt.attr('src', uri);
         self.showOverlay(cont, {cancel:function(){}});
