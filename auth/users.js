@@ -1,4 +1,4 @@
-var HASH = require('hashlib').sha1;
+var HASH = require('../lib/hashlib').sha1;
 
 module.exports = function(db) {
     if (!db) {
