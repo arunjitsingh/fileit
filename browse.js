@@ -99,7 +99,7 @@ module.exports = function(app) {
             if (err) {
                 response.send(json({error:err.error, where:request.url}), err.status);
             } else {
-                response.send(json({ok:true}), 200);
+                response.send(json({ok:true, id:to}), 200);
             }
         });
     });

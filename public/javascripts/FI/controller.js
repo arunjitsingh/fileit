@@ -23,6 +23,8 @@
         kBrowseURI          : 'browse',
         kUploadURI          : 'upload',
         kDownloadURI        : 'download',
+        kSharedURI          : 'shared',
+        kLinksURI           : 'links',
         user                : {}
     });
     FI.APP.kSupportedMIMETypes = ["application", "audio", "image", "text", "video"];
@@ -160,6 +162,37 @@
     
     FI.APP.browse = b;
     
+    var s = {};
+    s.toURI = function(uri) {
+        return FI.pathJoin(FI.APP.kServerRoot, FI.APP.kSharedURI, uri);
+    };
+    s.fetch = function(callback) {
+        var uri = s.toURI('/');
+        var options = {
+            url: uri,
+            type: GET,
+            success: callback || delegate.share.didFetch,
+            error: callback || delegate.share.didError
+        };
+        $.ajax(options);
+    };
+    s.send = function(id, userid, callback) {
+        
+    };
+    s.open = function(uri) {
+        uri = FI.pathJoin('/-s', uri);
+        var ifr = document.createElement('iframe');
+        ifr.src = uri;
+        return ifr;
+    };
+    s.download = function(uri) {
+        uri = s.toURI(uri);
+        var ifr = document.createElement('iframe');
+        ifr.src = uri + "?download=true";
+        return ifr;
+    };
+    
+    FI.APP.share = s;
     
     var d = {};
     d.toURI = function(id) {
@@ -176,7 +209,7 @@
 
     // File click handler
     FI.APP.fFileClickHandler = function(evt) {
-        evt.originalEvent.kFIContinueUp = true;
+        evt.originalEvent && (evt.originalEvent.kFIContinueUp = true);
         var elt = $(evt.target);
         if (evt.metaKey || evt.ctrlKey) {
             // Deselection
@@ -277,7 +310,29 @@
         }
     };
     
-
+    FI.APP.Transformers.SharedList = function(content) {
+        return content.map(function(c) {
+            var it = c.split('/');
+            var _ret = {};
+            _ret.user = it.shift(1);
+            _ret.file = it.pop();
+            _ret.uri = c;
+            return _ret;
+        });
+    };
+    FI.APP.SharedListTemplate = {
+        VIEW: {
+            ':root': {
+                'content': {
+                    'key': 'id',
+                    'type': 'text'
+                }
+            }
+        },
+        ACTION: {
+        }
+    };
+    
     FI.APP.setup = function(options) {
         delegate = options.delegate;
     };

@@ -46,6 +46,9 @@
             return path;
         }
     };
+    FI.pathBaseName = function(path) {
+        return path.substring(path.lastIndexOf('/')+1);
+    };
     FI.parseMIME = function(mimeType) {
         var mimeRE = /^([a-z]+)(\/)([a-z0-9\-]+)/;
         var match = mimeType.match(mimeRE);
@@ -294,7 +297,7 @@
             col.acceptResponder({
                 'click': function(evt) {
                     // click responder. This selects the column
-                    if (evt.originalEvent.kFIContinueUp) {
+                    if (evt.originalEvent && evt.originalEvent.kFIContinueUp) {
                         var idx = $(this).data().viewIndex;
                         self.selectColumn(idx);
                         evt.originalEvent.kFIContinueUp = false;

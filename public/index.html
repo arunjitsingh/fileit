@@ -12,6 +12,7 @@
   <script src="javascripts/vendor/date.js"></script>
   <script src="javascripts/vendor/debug.min.js"></script>
   <script src="javascripts/compat.js"></script>
+  <script src="javascripts/plugins.js"></script>
   <script src="javascripts/FI/core.js"></script>
   <script src="javascripts/FI/controller.js"></script>
   <script src="javascripts/index.js"></script>
@@ -23,7 +24,7 @@
       <li class="button" id="home" title="Home Folder">
         <img src="images/fi-home-2.png" height="64">
       </li>
-      <li class="button disabled" id="shared" title="Files Shared With Me">
+      <li class="button" id="shared" title="Files Shared With Me">
         <img src="images/fi-shared-2.png" height="64">
       </li>
       <li class="button disabled" id="links" title="My Links">
@@ -52,25 +53,40 @@
     </ul>
   </div>
   <div id="main">
-    <div id="browser-view">
+    <div id="browser-view" style="display:none">
       <!-- THE MAIN BROWSER -->
     </div>
-    <div id="shared-view">
+    <div id="shared-view" style="display:none">
       <!-- THE SHARED LISTING -->
+      <div id="shared-list">
+        <ul class="list shared">
+          <!-- $(".shared-list-item")s go here -->
+        </ul>
+      </div>
+      <div id="shared-viewer">
+        <!-- Viewer for shared files -->
+      </div>
     </div>
-    <div id="links-view">
+    <div id="links-view" style="display:none">
       <!-- THE LINKS LISTING -->
     </div>
   </div>
   <div id="error-bar"></div>
   <!-- OTHER ELEMENTS -->
   <div id="overlay">
-    <span id="close-overlay" class="button cancel">x</span>
+    <span id="close-overlay" class="button cancel"></span>
     <div id="overlay-container"></div>
     <div class="ajax-working" style="display:none"><img src="images/loader.gif"></div>
   </div>
   
   <div id="template-elements" style="display:none">
+    <!-- SHARED LIST ITEM -->
+    <li class="shared-list-item sli">
+      <span class="user"></span>
+      <span class="file"></span>
+      <span class="button" id="s-open-file" title="View File"><img src="images/fi-s-open.png" height="16"></span>
+      <span class="button" id="s-download-file" title="Download File"><img src="images/fi-s-download.png" height="16"></span>
+    </li>
     <!-- LOGIN -->
     <div id="login" class="dialog theme"><center>
       <form action="/auth" method="POST">

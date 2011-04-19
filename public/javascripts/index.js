@@ -59,14 +59,6 @@ $(document).ready(function() {
         }
     });
     
-    self.changeView = function(view) {
-        if (self.views.indexOf(view) > -1) {
-            // change the view
-            $("#"+self.currentView).removeClass("selected");
-            $("#"+view).addClass("selected");
-            self.currentView = view;
-        }
-    };
     
     self.$main = $("#main");
     self.updateMain = function() {
@@ -123,6 +115,53 @@ $(document).ready(function() {
     var BROWSER  = FI.APP.browse;
     var DOWNLOAD = FI.APP.download;
     var USER     = FI.APP.user;
+    var SHARED   = FI.APP.share;
+    
+    
+    self.changeView = function(view) {
+        if (self.views.indexOf(view) > -1) {
+            // change the view
+            $("#"+self.currentView).removeClass("selected");
+            $("#"+view).addClass("selected");
+            self.currentView = view;
+            self.view[view]();
+        }
+    };
+    
+    self.view = {
+        home: function() {
+            self.$main.hide();
+            $("#browser-view").show().siblings().hide();
+            self.columns.selectColumn(-1);
+            BROWSER.fetch(USER.home.id);
+            self.updateHash('/');
+            self.$main.show();
+        },
+        shared: function() {
+            self.$main.hide();
+            $("#shared-view").show().siblings().hide();
+            self.columns.selectColumn(-1);
+            $("#file-controls .button").addClass("disabled");
+            SHARED.fetch(function(response) {
+                if (response && response.ok && response.content) {
+                    var content = APP.Transformers.SharedList(response.content);
+                    content.forEach(function(data) {
+                        
+                        var li = $("li.sli").clone(true);
+                        li.attr('data-uri', data.uri);
+                        li.find('.user').text(data.user);
+                        li.find('.file').text(data.file);
+                        
+                        $("#shared-list .list").append(li);
+                    });
+                }
+            });
+            
+            self.$main.show();
+        },
+        links: function() {}
+    };
+    
     
     var toUploadURI = function(id) {
         return FI.pathJoin(APP.kServerRoot, APP.kUploadURI, id);
@@ -200,10 +239,17 @@ $(document).ready(function() {
             var vi = self.currentColumn.data().viewIndex;
             self.columns.selectColumn(vi);
         }
-        
+        var nid = response.id;
         var data = self.currentSelection.data(),
             id = data.id;
-        BROWSER.fetch(id);
+        if (nid) {
+            BROWSER.fetch(id, function(res) {
+                self.browse.didFetch(res);
+                $(".column").last().find("[data-id='" + nid +"']").click();
+            });
+        } else {
+            BROWSER.fetch(id);
+        }
         self.hideOverlay();
     };
     self.browse.didCreate = function(response) {
@@ -231,15 +277,15 @@ $(document).ready(function() {
         } 
     };
     
-    self.doSelection = function(elt) {
+    self.doSelection = function(elt, callback) {
         self.currentSelection = elt;
         var id = elt.data().id;
         //FI.log('data', elt.data());
         BROWSER.fetch(id);
-        self.selectionChanged();
+        self.selectionChanged(callback);
     };
     
-    self.cancelSelection = function(elt) {
+    self.cancelSelection = function(elt, callback) {
         self.currentSelection 
             && self.currentSelection.removeClass('selected');
         elt.removeClass('selected');
@@ -249,10 +295,15 @@ $(document).ready(function() {
         } else {
             self.currentSelection = $('.list .selected').last();
         }
-        self.selectionChanged();
+        self.selectionChanged(callback);
     };
     
-    self.selectionChanged = function() {
+    self.selectionChanged = function(callback) {
+        // `callback` for dependant code
+        var cb = callback && typeof(callback)==='function';
+        // `setTimeout` to fix a problem with selectors being slower
+        // than async callback to here. 50ms is plenty of time for 
+        // the selectors to propagate to all elements
         setTimeout(function() {
             var elt = self.currentSelection;
             //FI.log("selectionChanged > ", elt.get(0));
@@ -278,23 +329,20 @@ $(document).ready(function() {
             }
             var id = self.currentSelection.data().id;
             self.updateHash(id);
+            cb && callback();
         }, 50);
     };
     
     // Authentication methods
     self.didAuthenticate = function(response, status, xhr) {
         if (response && response.ok) {
-            self.columns.selectColumn(-1);
             USER = response.user;
             USER.home = {
                 id:'/',
                 isDirectory: true
             };
             self.currentSelection = $('#homedata').data(USER.home);
-            BROWSER.fetch(USER.home.id);
-            self.changeView("home");
-            self.updateHash('/');
-            $("#main").show();
+            self.changeView('home');
             self.hideOverlay();
         }
         else {
@@ -334,14 +382,17 @@ $(document).ready(function() {
     };
     
     self.showOverlay = function(elt, options) {
-        options = options || {cancel:function(){}};
-        options.cancel = options.cancel || function(){};
+        options = options || {};
+        options.loaded = options.loaded || function() {};
+        options.ok = options.ok || function() {};
+        options.cancel = options.cancel || function() {};
         //FI.log("overlay elt, options:", elt, options);
         elt = $(elt);
         var overlay = $("#overlay"),
             container = overlay.find("#overlay-container");
         container.empty();
         container.append(elt);
+        elt.find(".the-content").bind('load', options.loaded);
         $("#close-overlay, .cancel", overlay).click(function() {
             if ($(this).hasClass('disabled')) return;
             options.cancel();
@@ -349,8 +400,7 @@ $(document).ready(function() {
         });
         $(".ok", overlay).click(function() {
             if ($(this).hasClass('disabled')) return;
-            if (options && options.ok && typeof(options.ok)==='function')
-                options.ok();
+            options.ok();
             self.hideOverlay();
         });
         overlay.show();
@@ -371,6 +421,21 @@ $(document).ready(function() {
     
     
     // UI events
+    $("#home").click(function() {
+        if ($(this).hasClass('disabled')) return;
+        self.changeView('home');
+    });
+    
+    $("#shared").click(function() {
+        if ($(this).hasClass('disabled')) return;
+        self.changeView('shared');
+    });
+    
+    $("#links").click(function() {
+        if ($(this).hasClass('disabled')) return;
+    });
+    
+    
     $("#upload").click(function() {
         if ($(this).hasClass('disabled')) return;
         var elt = self.currentSelection;
@@ -459,19 +524,24 @@ $(document).ready(function() {
             cancel: function() {}
         });
     });
+    
     $("#rename, #rename-file").click(function() {
         if ($(this).hasClass('disabled')) return;
         var elt = self.currentSelection;
         var id = elt.data().id;
         var par = id.substring(0, id.lastIndexOf('/'));
         var con = $("#rename-bar").clone();
-        con.find(".rename-file-id").text(id);
+        var fn = FI.pathBaseName(id);
+        con.find(".rename-file-id").text(fn);
+        con.find("input[name=newname]").val(fn);
         self.showOverlay(con, {
             ok: function() {
                 var newname = con.find("input[name=newname]").val();
                 if (newname && newname !== '') {
-                    self.cancelSelection(self.currentSelection);
-                    BROWSER.update(id, {id:FI.pathJoin(par, newname)});
+                    self.cancelSelection(self.currentSelection, function() {
+                        BROWSER.update(id, {id:FI.pathJoin(par, newname)});
+                    });
+                    
                 }
             },
             cancel: function() {}
@@ -504,11 +574,17 @@ $(document).ready(function() {
         var tags = self.tagForType(mime.type);
         var cont = $("#open-container").clone();
         var elt = $(tags[0]);
+        elt.addClass('the-content');
         if (elt.is('video')) cont.addClass('video');
         else if (elt.is('audio')) cont.addClass('audio');
         cont.append(elt);
         elt.attr('src', uri);
-        self.showOverlay(cont, {cancel:function(){}});
+        self.showOverlay(cont, {
+            loaded: function() {
+                if (elt.is('img')) elt.absoluteCenter();
+            },
+            cancel: function() {}
+        });
     });
     
     $("#settings").click(function() {
