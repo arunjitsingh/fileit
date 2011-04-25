@@ -14,7 +14,8 @@
     -moz-transition: all 100ms ease-in-out;
 }
 .theme input[type=submit],
-.theme input[type=file] {
+.theme input[type=file],
+.theme input[type=checkbox] {
     cursor: pointer;
 }
 .theme input:hover {

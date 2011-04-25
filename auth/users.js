@@ -125,12 +125,13 @@ module.exports = function(db) {
                 callback({status:403, error:"User could not be accessed", detail:err}, null);
             } else {
                 var k = doc[key];
-                if (k && k.length !== undefined) {
+                if (k && (k.length !== undefined) && (k.indexOf(value) === -1)) {
                     k.push(value);
                 }
                 doc[key] = k;
                 db.save(doc, function(err, dbres) {
                    if (err) {
+                       console.log("userAuth#pushValue, User update error: ", err);
                        callback({status:403, error:"User could not be updated", detail:err}, null);
                    } else {
                        callback(null, dbres);

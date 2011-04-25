@@ -1,5 +1,6 @@
 var auth = require('./auth/req');
 var path = require('path');
+var FI = require('./file/info');
 var json = JSON.stringify;
 module.exports = function(app) {
     
@@ -34,6 +35,39 @@ module.exports = function(app) {
         
     });
     
+    app.get('/shared/:id/:uri(*)', function(request, response) {
+        response.contentType('json');
+        
+        // Authenticate user
+        var user = auth(request);
+        if (!user) {
+            response.send(json({error: "You are not logged in!"}), 401);
+            return;
+        }
+        var id = request.param('id', null);
+        if (!id) {
+            response.send(json({error:"Invalid request. User ID not sent"}), 400);
+            return;
+        }
+        var uri = request.param('uri', null);
+        if (!uri) {
+            response.send(json({error:"Invalid request. No URI sent"}), 400);
+            return;
+        }
+        var options = {
+            root: path.join(app.userDir, id)
+        };
+        // Send information about the file at the URI.
+        // Appropriately handle errors
+        FI.info(uri, options, function(err, info) {
+            if (err) {
+                response.send(json({error:err.error, where:request.url}), err.status);
+            } else {
+                response.send(json({ok:true, content:info}), 200);
+            }
+        });
+    });
+    
     // Share file with user
     app.post('/share/:id/:uri(*)', function(request, response) {
         
@@ -44,7 +78,7 @@ module.exports = function(app) {
         }
         var uid = user.id || user. _id;
         var id = request.param('id', null);
-        if (!id) {
+        if (!id || uid === id) {
             response.send(json({error:"Invalid request. User ID not sent"}), 400);
             return;
         }
@@ -66,8 +100,8 @@ module.exports = function(app) {
         
     });
     
-    // Download shared file for
-    app.get('/-s/:id/:uri(*)', function(request, response) {
+    // Download shared file
+    app.all('/-s/:id/:uri(*)', function(request, response) {
         var user = auth(request);
         if (!user || !(user.id || user._id)) {
             response.send(json({error: "You are not logged in!"}), 401);
@@ -103,6 +137,22 @@ module.exports = function(app) {
         });
     });
     
+    app.get('/-info/:uri(*)', function(request, response) {
+        var user = auth(request);
+        if (!user || !(user.id || user._id)) {
+            response.send(json({error: "You are not logged in!"}), 401);
+            return;
+        }
+        var id = user.id || user._id;
+        var uri = request.param('uri', null);
+        if (!uri) {
+            response.send(json({error:"Invalid request. No URI sent"}), 400);
+            return;
+        }
+        USERS.has(id, kCDN, uri, function(has) {
+            response.send(json({ok:true, exists:has}), 200);
+        });
+    });
     
     // Add URI for CDN access
     app.post('/-/:uri(*)', function(request, response) {
@@ -122,7 +172,8 @@ module.exports = function(app) {
             if (err) {
                 response.send(json({error:err.error}), err.status);
             } else {
-                response.send(json({ok:true}), 200);
+                var u = path.join('/-', id, uri);
+                response.send(json({ok:true, uri:u}), 200);
             }
         });
         

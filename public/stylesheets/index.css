@@ -14,7 +14,7 @@ body {
     bottom: 0px;
     width: 64px;
     height: auto;
-    background-color: #0C89AF;
+    background-color: #9AA0A6;/*#0C89AF;*/
     -webkit-box-shadow: inset 0 0 8px #000;
     -webkit-user-select: none;
 }
@@ -111,14 +111,18 @@ body {
     background-color:#FFF;
     height: 100%;
     width: inherit;
-    z-index: 51;
+    z-index: 53;
 }
 
 .column {
     position: absolute;
-    bottom: 0px;
+    top: 0px; bottom: 0px;
     height: auto;
     background-color: white;
+    border-left: 1px solid rgba(0,0,0,0.50);
+}
+.column:first-of-type {
+    border-left: none;
 }
 
 .column .list {
@@ -130,6 +134,7 @@ body {
     list-style: none;
     padding:5px 5px 5px 26px;
     cursor: pointer;
+    -webkit-user-select: none;
 }
 
 .column .list li.DIR {
@@ -157,7 +162,7 @@ body {
 }
 /* ******** */
 .column .list li:hover {
-    background-color: rgba(255,255,221,0.75);
+    background-color: rgba(255,255,224,0.75);
     cursor: pointer;
 }
 
@@ -167,28 +172,92 @@ body {
     cursor: pointer;
 }
 
+.column .list li.empty,
+.column .list li.empty:hover {
+    background: none;
+    font: 12px "Droid Serif" italic;
+    text-align: center;
+    cursor: default;
+}
+
+.file-details {
+    font-family: "Droid Serif", serif;
+    font-size: 12px;
+    padding: 15px 0;
+}
+.file-details table td {
+    padding: 3px 5px;
+}
+.file-details table .label {
+    text-align: right;
+}
+
+.file-details .file-name,
+.file-details .file-size,
+.file-details .file-ctime,
+.file-details .file-mtime {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.file-details #buttons {
+    margin-top: 32px;
+    margin-bottom: 32px;
+}
+.file-details .cdn-info {
+    width: 300px;
+    margin-left: 12px;
+    text-align: center;
+}
+.file-details #cdn-check {
+    color: #0AF;
+}
+.file-details #cdn-result {
+    text-align: left;
+    padding: 5px;
+    font-size: 14px;
+    text-decoration: underline;
+}
+.file-details #cdn-result.disabled {
+    text-decoration: none;
+}
 
 #shared-view #shared-list {
-    position: absolute; left: 0; top: 0; bottom: 0;
-    width: 300px;
+    position: absolute; left: 10px; top: 0; bottom: 0;
+    width: 325px;
     list-style: none;
+    overflow-y: scroll;
+    z-index: 52;
+    -webkit-box-shadow: 5px 0 5px rgba(0,0,0,0.35);
 }
 #shared-list li {
-    height: 16px;
     padding: 5px;
     font: 16px "Droid Serif";
     vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
 }
 #shared-list li .user {
     font-size: 12px;
     color: #808080;
 }
+#shared-list .list li:hover {
+    background-color: rgba(255,255,224,0.75);
+    cursor: pointer;
+}
+
+#shared-list .list li.selected {
+    color: white;
+    background-color: rgba(80,112,208,0.75);
+    cursor: pointer;
+}
 
 #shared-view #shared-viewer {
-    position: absolute; left: 300px; top: 10px; bottom: 0px;
-    right: 10px; width: auto;
+    position: absolute; left: 325px;
+    top:0; bottom: 0; height: auto;
+    width: 335px;
     background-color: #FEFEFE;
-    -webkit-box-shadow: inset 0 0 10px #000;
+    z-index: 51;
 }
 
 #shared-list,
@@ -196,6 +265,13 @@ body {
     height: auto;
 }
 
+#shared-view #shared-viewer iframe {
+    position: absolute;
+    background-color: transparent;
+    top: 0; right: 0; bottom: 0; left: 0;
+    width: inherit; height: inherit;
+    min-width: 99%; min-height: 99%;
+}
 .dialog {
     position: absolute;
     padding: 20px 0;
@@ -234,12 +310,18 @@ body {
 #upload-bar,
 #newdir-bar,
 #delete-bar,
-#rename-bar {
+#rename-bar,
+#share-bar {
     background-color: #BD8427;
     width: 720px; height: 160px;
     left: 50%; margin-left: -360px;
     top: 50%; margin-top: -80px;
 }
+
+.dialog h3 .file-name {
+    color: #000;
+}
+
 .dialog input {
     color: #444;
 }
@@ -258,6 +340,17 @@ body {
 
 #upload-bar input:hover {
     cursor: pointer;
+}
+#share-bar td {
+    font: 16px "Droid Serif" bold;
+    text-shadow: none;
+    color: #000;
+}
+#share-bar input[name=friendID] {
+    width: 384px;
+}
+#share-bar .button-bar td {
+    text-align: center;
 }
 
 .dialog .cancel {
@@ -344,39 +437,36 @@ body {
     background-position: 0 0;
 }
 
-#details {
-    font-family: "Droid Serif", serif;
-    font-size: 12px;
-}
 
-#details .file-name,
-#details .file-size,
-#details .file-ctime,
-#details .file-mtime {
-    font-size: 16px;
-    font-weight: bold;
-}
+
 #settings-bar {
     position: absolute;
     width: 512px; left: 50%;
     margin-left: -256px;
-    height: 64px; top: 50%;
-    margin-top: -32px;
+    height: 128px; top: 50%;
+    margin-top: -64px;
     text-align: center;
     vertical-align: middle;
+}
+#settings-bar h3 {
+    font: 32px "Megalopolis";
+    text-align: center;
 }
 #settings-bar button {
     font: 24px "Megalopolis";
 }
 
-#error-bar {
+
+
+
+
+#info-bar {
     position: absolute;
     bottom: 10px;
-    width: 512px; left: 50%;
-    margin-left: -256px;
-    opacity: 0;
-    background-color: rgba(255, 16, 16, 0.85);
+    width: 768px; left: 50%;
+    margin-left: -384px;
     color: #FFF;
+    background-color: rgba(16, 16, 255, 0.85);
     text-align: center;
     z-index: 1000;
     height: 16px;
@@ -388,7 +478,21 @@ body {
     -webkit-transition: opacity 2s ease-in-out;
     -moz-transition: opacity 2s ease-in-out;
 }
-.showerror #error-bar {
+#info-bar .info-uri {
+    color: #000;
+}
+.success #info-bar {
+    background-color: rgba(16, 255, 16, 0.85);
+}
+
+.error #info-bar {
+    background-color: rgba(255, 16, 16, 0.85);
+}
+#info-bar.hidden {
+    opacity: 0;
+}
+
+#info-bar.visible {
     opacity: 1;
 }
 

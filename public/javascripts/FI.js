@@ -2,7 +2,10 @@
     if (!$) throw "jQuery is required for FI";
     
     var FI = {};
-
+    var YES = true;
+    var NO = false;
+    
+    
     FI.$ = function(value) {
         if(typeof(value)==='string' && !value.match(/^[#\.:]/)) {
             value = "#"+value;
@@ -156,7 +159,9 @@
     FI.View.applyAttributes = function(elt, attributes) {
         elt = $(elt);
         var data = elt.data();
-
+        if (!data) {
+            return elt;
+        }
 
         //FI.log(data, "FI.View.applyAttributes");
         for (attr in attributes) {
@@ -251,8 +256,8 @@
         columnClass:'column',
         columnWidth:450,
         columnGap:10,
-        autoScrollX:true,
-        autoScrollY:true,
+        autoScrollX:YES,
+        autoScrollY:YES,
         columnCSS: {}   
     };
 
@@ -300,7 +305,7 @@
                     if (evt.originalEvent && evt.originalEvent.kFIContinueUp) {
                         var idx = $(this).data().viewIndex;
                         self.selectColumn(idx);
-                        evt.originalEvent.kFIContinueUp = false;
+                        evt.originalEvent.kFIContinueUp = NO;
                     }
                 }
             });
@@ -374,30 +379,43 @@
                         'key': 'source'
                     }
                 }
-            },
-            ACTION: {
-                'click': function(){alert('clicked');}      
             }
-        }
+        },
+        cloneFrom: null,
+        showEmpty: YES,
+        autobind: YES
     };
 
     FI.ListView = FI.View.extend({
-        init: function(node, options) {
+        init: function(node, options, delegate) {
             this.__super__(node);
             this.__content = [];
-            this.options = $.extend(FI.ListViewOptions, options);
+            this.__delegate = delegate;
+            this.options = $.extend({}, FI.ListViewOptions, options);
         },
 
-        view: function() {
-            this.render();
+        view: function(doRender) {
+            doRender && this.render();
             return this.node;
         },
 
         render: function() {
             var count = this.__content.length;
+            var li;
+            if (count == 0 && this.options.showEmpty) {
+                li = FI.$new('li', {'class':'empty disabled'});
+                li.text("No Content");
+                this.node.append(li);
+                return;
+            }
             for (var i = 0; i < count; ++i) {
-                var li = FI.$new('li',{});
+                if (this.options.cloneFrom !== null) {
+                    li = $(this.options.cloneFrom).clone(true);
+                } else {
+                    li = FI.$new('li',{});
+                }
                 li.data(this.__content[i]);
+                //FI.log(li, li.data());
                 li = this.renderElement(li);
                 this.node.append(li);
             }
@@ -409,20 +427,34 @@
             var view = design.VIEW;
             for (var sel in view) {
                 var e;
-                //console.log(sel);
+                //FI.log(sel);
                 if (sel.match(/:root/i)) {
                     e = elt;
-                    //console.log(":root found");
+                    //FI.log(":root found");
                 } else {
                     e = elt.children(sel);
+                    e.data(elt.data());
                 }
-                //console.log("E:");console.log(e[0]);
+                //FI.log("E:", e[0]);
                 var attributes = view[sel];
                 e = FI.View.applyAttributes(e, attributes);
             }
-
-            if ("ACTION" in design) {
-                elt.bind(design.ACTION);
+            var self = this;
+            if (this.options.autobind) {
+                elt.bind({
+                    'click':function(evt) {
+                        evt.originalEvent && (evt.originalEvent.kFIContinueUp = YES);
+                        //var elt = $(evt.target);
+                        if (evt.metaKey || evt.ctrlKey) {
+                            // Deselection
+                            self.__delegate.cancelSelection(elt, self);
+                        } else {
+                            // Selection
+                            self.__delegate.doSelection(elt, self);
+                        }
+                        return true;
+                    }
+                });
             }
             return elt;
         },
@@ -437,10 +469,12 @@
         }
     });
 
-    FI.ListView.createSimpleList = function(options) {
+    FI.ListView.createSimpleList = function(options, delegate) {
         var elt = FI.$new('ul',{'class':'list'});
-        return new FI.ListView(elt, options);
+        return new FI.ListView(elt, options, delegate);
     };
     
+    window.YES = YES;
+    window.NO = NO;
     window.FI = FI;
 })(jQuery);

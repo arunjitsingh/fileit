@@ -15,4 +15,27 @@
         });        
     };
     
+    $._enable = $.enable;
+    $.fn._enable = $.fn.enable;
+    
+    $.fn.enable = function() {
+        return this.each(function() {
+            $(this).removeClass('disabled');
+            $(this)._enable(true);
+        });
+    };
+    $.enable = function(sel) {
+        return $(sel).enable();
+    };
+    
+    $.fn.disable = function() {
+        return this.each(function() {
+            $(this).addClass('disabled');
+            $(this)._enable(false);
+        });
+    };
+    $.disable = function(sel) {
+        return $(sel).disable();
+    };
+    
 })(jQuery);
