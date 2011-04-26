@@ -1,501 +1,97 @@
 @import url('fonts.css');
 @import url('buttons.css');
 @import url('inputs.css');
-@import url('scrollbars.css');
 
 body {
-    overflow: hidden;
-}
-
-#sidebar {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    bottom: 0px;
-    width: 64px;
-    height: auto;
-    background-color: #9AA0A6;/*#0C89AF;*/
-    -webkit-box-shadow: inset 0 0 8px #000;
-    -webkit-user-select: none;
-}
-
-#sidebar,
-.sidebar-controls li:hover,
-.sidebar-controls li:active,
-.sidebar-controls li.selected {
-    background-image: -webkit-gradient(linear, right top, left top,
-        from(rgba(255,255,255,0.05)),
-        color-stop(0.25, rgba(255,255,255,0.15)),
-        color-stop(0.45, rgba(255,255,255,0.20)),
-        color-stop(0.50, rgba(255,255,255,0.15)),
-        color-stop(0.55, rgba(128,128,128,0.15)),
-        to(rgba(0,0,0,0.3))
-        );
-    background-image: -moz-linear-gradient(0deg,
-        rgba(255,255,255,0.05),
-        rgba(255,255,255,0.15) 25%,
-        rgba(255,255,255,0.20) 45%,
-        rgba(255,255,255,0.15) 50%,
-        rgba(128,128,128,0.15) 55%,
-        rgba(0,0,0,0.3)
-        );
-}
-
-#sidebar {
-    -webkit-transition: background-color 2s ease-in-out;
-    -moz-transition: background-color 2s ease-in-out;
-}
-
-.error #sidebar,
-.offline #sidebar {
-    background-color: #800000;
-}
-.sidebar-controls li {
-    background-color: transparent;
-    -webkit-transition: all 400ms ease-in-out;
-    -moz-transition: all 400ms ease-in-out;
-}
-.sidebar-controls li:hover {
-    background-color: rgba(255,255,255,0.25);
-    -webkit-transition: all 150ms ease-in-out;
-    -moz-transition: all 150ms ease-in-out;
-}
-.sidebar-controls li:active {
-    background-color: rgba(0,0,0,0.25);
-    -webkit-box-shadow: inset 0 0 8px #000;
-}
-.sidebar-controls li.selected {
+    -webkit-transform: traslateZ(0);
     background-color: #FFF;
-    z-index: 51;
-}
-.sidebar-controls li.selected:hover,
-.sidebar-controls li.disabled:hover {
-    -webkit-box-shadow: none;
-    -webkit-transition: none;
-    -moz-transition: none;
-}
-.sidebar-controls li.disabled:hover {
-    background-color: transparent;
-    background-image: none;
-}
-
-#app-controls #settings {
-    position:absolute;
-    bottom: 0px;
-}
-
-#file-controls {
-    margin-top: 16px;
-}
-
-#main {
-    display: none;
-    position: absolute;
-    top: 0px;
-    left:64px;
-    right: 0px;
-    bottom: 0px;
-    width: auto;
-    height: auto;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    /*box-shadow: -1px 0 8px black;
-        -webkit-box-shadow: -1px 0 8px black;*/
-    z-index: 50;
-    -webkit-user-select: none;
-}
-
-#browser-view,
-#shared-view,
-#links-view {
-    background-color:#FFF;
-    height: 100%;
-    width: inherit;
-    z-index: 53;
-}
-
-.column {
-    position: absolute;
-    top: 0px; bottom: 0px;
-    height: auto;
-    background-color: white;
-    border-left: 1px solid rgba(0,0,0,0.50);
-}
-.column:first-of-type {
-    border-left: none;
-}
-
-.column .list {
-    padding:0;
     font-family: "Droid Serif";
-}
-
-.column .list li {
-    list-style: none;
-    padding:5px 5px 5px 26px;
-    cursor: pointer;
-    -webkit-user-select: none;
-}
-
-.column .list li.DIR {
-    font-weight: bold;
-    background: url("../images/fi-dir-2.png") no-repeat 2px;
-}
-/* File type icons */
-.column .list li {
-     background: url("../images/fi-i-FILE.png") no-repeat 2px;
-}
-.column .list li.application {
-    background: url("../images/fi-i-application.png") no-repeat 2px;
-}
-.column .list li.audio {
-    background: url("../images/fi-i-audio.png") no-repeat 2px;
-}
-.column .list li.image {
-    background: url("../images/fi-i-image.png") no-repeat 2px;
-}
-.column .list li.text {
-    background: url("../images/fi-i-text.png") no-repeat 2px;
-}
-.column .list li.video {
-    background: url("../images/fi-i-video.png") no-repeat 2px;
-}
-/* ******** */
-.column .list li:hover {
-    background-color: rgba(255,255,224,0.75);
-    cursor: pointer;
-}
-
-.column .list li.selected {
-    color: white;
-    background-color: rgba(80,112,208,0.75);
-    cursor: pointer;
-}
-
-.column .list li.empty,
-.column .list li.empty:hover {
-    background: none;
-    font: 12px "Droid Serif" italic;
+    font-weight: normal;
     text-align: center;
-    cursor: default;
 }
-
-.file-details {
-    font-family: "Droid Serif", serif;
-    font-size: 12px;
-    padding: 15px 0;
-}
-.file-details table td {
-    padding: 3px 5px;
-}
-.file-details table .label {
-    text-align: right;
-}
-
-.file-details .file-name,
-.file-details .file-size,
-.file-details .file-ctime,
-.file-details .file-mtime {
+#bodycontainer {
+    width: 960px;
+    position: absolute;
+    left: 50%; margin-left: -480px;
     font-size: 16px;
-    font-weight: bold;
+}
+header {
+    margin: 32px 0;
+    height: 128px;
+    text-align: left;
+}
+header table {
+    margin: 10px 0;
+}
+header table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px 20px;
+}
+header button[type=special],
+header button[type=submit] {
+    font: bold 1.25em "Megalopolis";
+    padding: 10px 15px 7px 15px;
 }
 
-.file-details #buttons {
-    margin-top: 32px;
-    margin-bottom: 32px;
+#demo-media {
+    background-color: #FFF;
 }
-.file-details .cdn-info {
-    width: 300px;
-    margin-left: 12px;
-    text-align: center;
+h4 {
+    text-align: left;
+    font: bold 1.5em/2em "Megalopolis";
+    text-shadow: 0 1px 2px #555;
 }
-.file-details #cdn-check {
+section {
+    font: 1em/1.75em "Droid Serif";
+    margin-top: 10px;
+    text-align: justify;
+}
+
+section p {
+    margin: 15px 0;
+}
+
+section a,
+section a:visited {
     color: #0AF;
 }
-.file-details #cdn-result {
-    text-align: left;
-    padding: 5px;
-    font-size: 14px;
-    text-decoration: underline;
-}
-.file-details #cdn-result.disabled {
-    text-decoration: none;
+section a:hover,
+section a:active {
+    color: #FA0;
 }
 
-#shared-view #shared-list {
-    position: absolute; left: 10px; top: 0; bottom: 0;
-    width: 325px;
-    list-style: none;
-    overflow-y: scroll;
-    z-index: 52;
-    -webkit-box-shadow: 5px 0 5px rgba(0,0,0,0.35);
+section:first-of-type {
+    margin-top: 32px;
 }
-#shared-list li {
-    padding: 5px;
-    font: 16px "Droid Serif";
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
+section:last-of-type {
+    margin-bottom: 32px;
 }
-#shared-list li .user {
+
+hr.spacer {
+    display: block;
+    border: none;
+    height: 2px;
+    background: -webkit-gradient( linear, left top, right top,
+        from(transparent), 
+        color-stop( 0.30, rgba(0,0,0,0.15) ),
+        color-stop( 0.50, rgba(0,0,0,0.30) ),
+        color-stop( 0.70, rgba(0,0,0,0.15) ),
+        to(transparent) );
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+footer {
+    margin: 32px 0;
+    width: 100%;
+    font-family:"Megalopolis";
     font-size: 12px;
-    color: #808080;
-}
-#shared-list .list li:hover {
-    background-color: rgba(255,255,224,0.75);
-    cursor: pointer;
-}
-
-#shared-list .list li.selected {
-    color: white;
-    background-color: rgba(80,112,208,0.75);
-    cursor: pointer;
-}
-
-#shared-view #shared-viewer {
-    position: absolute; left: 325px;
-    top:0; bottom: 0; height: auto;
-    width: 335px;
-    background-color: #FEFEFE;
-    z-index: 51;
-}
-
-#shared-list,
-#shared-viewer {
-    height: auto;
-}
-
-#shared-view #shared-viewer iframe {
-    position: absolute;
-    background-color: transparent;
-    top: 0; right: 0; bottom: 0; left: 0;
-    width: inherit; height: inherit;
-    min-width: 99%; min-height: 99%;
-}
-.dialog {
-    position: absolute;
-    padding: 20px 0;
-    color: white;
-    border-radius: 0.5em;
-    -webkit-border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
-    box-shadow: inset 0 0 15px #000;
-    -webkit-box-shadow: inset 0 0 15px #000;
-    -moz-box-shadow: inset 0 0 15px #000;
-    border-top: 1px solid rgba(0,0,0,0.5);
-    border-bottom: 1px solid rgba(255,255,255,0.5);
-    background-image: -webkit-gradient(linear, left top, left bottom,
-        from(transparent), to(rgba(0,0,0,0.5)));
-    color: #FFF;
-    text-shadow: 0 0 4px #000;
-}
-
-#login {
-    background-color: #2784BD;
-    font-family: "Megalopolis";
-    width: 720px; height: 420px;
-    left: 50%; margin-left: -360px;
-    top: 50%; margin-top: -210px;
-}
-#login input:after,
-#login button[type=submit]:after {
-    content: '';
-    height: 10px;
-    /*width: inherit;*/
-    margin-top: 12px;
-    border-radius: 0.25em;
-    border-bottom: 1px solid #eee;
-}
-        
-#upload-bar,
-#newdir-bar,
-#delete-bar,
-#rename-bar,
-#share-bar {
-    background-color: #BD8427;
-    width: 720px; height: 160px;
-    left: 50%; margin-left: -360px;
-    top: 50%; margin-top: -80px;
-}
-
-.dialog h3 .file-name {
-    color: #000;
-}
-
-.dialog input {
     color: #444;
 }
-.dialog input,
-.dialog button {
-    margin:2px 5px;
-    font: 16px/24px "Droid Serif";
-}
-.dialog input:focus,
-.dialog button:focus {
-    color: #000;
-    box-shadow: 0 0 8px #2cf, 0 0 16px #fff;
-    -webkit-box-shadow: 0 0 8px #2cf, 0 0 16px #fff;
-    -moz-box-shadow: 0 0 8px #2cf, 0 0 16px #fff;
-}
-
-#upload-bar input:hover {
-    cursor: pointer;
-}
-#share-bar td {
-    font: 16px "Droid Serif" bold;
-    text-shadow: none;
-    color: #000;
-}
-#share-bar input[name=friendID] {
-    width: 384px;
-}
-#share-bar .button-bar td {
-    text-align: center;
-}
-
-.dialog .cancel {
-    margin-top: 20px;
-}
-
-.dialog.error input {
-    box-shadow: 0 0 16px #C00;
-    -webkit-box-shadow: 0 0 16px #C00;
-    -moz-box-shadow: 0 0 16px #C00;
-}
-
-#overlay {
-    position: absolute;
-    top:0;
-    left:0;
-    z-index: 10000;
-    width: inherit;
-    height: inherit;
-    background-color: rgba(64,64,64,0.97);
-    display:none;
-}
-#overlay h3 {
-    margin:0; padding: 0;
-    font: 24px/24px "Megalopolis";
-    margin-bottom: 20px;
-    text-shadow: 0 0 10px #222;
-}
-#overlay .ajax-working {
-    position: absolute; bottom: 50px; left: 0;
-    width: 100%; text-align: center;
-}
-
-#overlay-container {
-
-}
-#overlay-container input,
-#overlay-container button {
-    font: 16px "Droid Sans" bold;
-}
-#overlay #open-container {
-    position: absolute; 
-    left: 64px; right: 64px;
-    width: auto;
-    top: 0; bottom: 0;
-    height: auto;
-    overflow: auto;
-    text-align: center;
-    vertical-align: middle;
-    background-color: #FFF;
-}
-#overlay #open-container iframe {
-    width: 100%; height: inherit;
-    min-height: 99%;
-}
-#overlay #open-container.video video,
-#overlay #open-container.video audio {
-    max-width: 99%;
-    max-height: 99%;
-    background-color: #000;
-}
-#overlay #open-container.video {
-    background-image: url('../images/fi-video-big.png');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-}
-#overlay #open-container.audio {
-    background-image: url('../images/fi-audio-big.png');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-}
-#overlay #close-overlay {
-    position: absolute; left: 20px; top: 20px;
-    width: 29px; height: 29px;
-    background-image: url('../images/fi-close.png');
-    background-position: 0 0;
-}
-#overlay #close-overlay:hover {
-    background-position: 0 29px;
-}
-#overlay #close-overlay:active {
-    background-position: 0 0;
-}
-
-
-
-#settings-bar {
-    position: absolute;
-    width: 512px; left: 50%;
-    margin-left: -256px;
-    height: 128px; top: 50%;
-    margin-top: -64px;
-    text-align: center;
-    vertical-align: middle;
-}
-#settings-bar h3 {
-    font: 32px "Megalopolis";
-    text-align: center;
-}
-#settings-bar button {
-    font: 24px "Megalopolis";
-}
-
-
-
-
-
-#info-bar {
-    position: absolute;
-    bottom: 10px;
-    width: 768px; left: 50%;
-    margin-left: -384px;
-    color: #FFF;
-    background-color: rgba(16, 16, 255, 0.85);
-    text-align: center;
-    z-index: 1000;
-    height: 16px;
-    padding: 16px;
-    border-radius: 0.5em;
-    -webkit-border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
-    font-family: "Megalopolis";
-    -webkit-transition: opacity 2s ease-in-out;
-    -moz-transition: opacity 2s ease-in-out;
-}
-#info-bar .info-uri {
-    color: #000;
-}
-.success #info-bar {
-    background-color: rgba(16, 255, 16, 0.85);
-}
-
-.error #info-bar {
-    background-color: rgba(255, 16, 16, 0.85);
-}
-#info-bar.hidden {
-    opacity: 0;
-}
-
-#info-bar.visible {
-    opacity: 1;
-}
-
 .F-I {
     font-family: "DOCK11 Heavy";
     letter-spacing: 1px;
@@ -505,6 +101,33 @@ body {
 }
 .F-I .F-I-ex {
     color: #888;
-    font-size: 1.25em;
+    font-size: 1.5em;
     vertical-align:text-top;
+}
+
+::-webkit-scrollbar,
+::-webkit-scrollbar-track-piece,
+::-webkit-resizer {
+    background-color: #FFF;
+    width: 10px;
+    height: 10px;
+    border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb:horizontal,
+iframe ::-webkit-scrollbar-thumb:vertical,
+iframe ::-webkit-scrollbar-thumb:horizontal {
+  -webkit-transition: all 100ms;
+  background-color: rgba(0,0,0,0.35);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:vertical:active,
+::-webkit-scrollbar-thumb:horizontal:active {
+  background-color: rgba(0,0,0,0.50);
+}
+
+::selection,
+::-webkit-selection {
+    color: #FFF;
+    background-color: rgba(0,0,0,0.75);
 }

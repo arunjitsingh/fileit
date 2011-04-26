@@ -59,6 +59,10 @@
         else return null;
     };
 
+    // Constants
+    FI.kError   = "ERROR";
+    FI.kSuccess = "SUCCESS";
+
     FI.Stack = Class({
         init: function() {
             this.stack = [];

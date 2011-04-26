@@ -183,7 +183,7 @@
             FI.log("Added File to CDN!");
             var uri = response.uri || "";
             uri = (location.origin) + uri;
-            var info = "Added File to CDN!<br><span class='info-uri'>" + uri + "</span>";
+            var info = "Added File to CDN!";
             APP.$.trigger("success", [{showInfo: true, info:info}]);
         }
     };

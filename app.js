@@ -93,6 +93,10 @@ app._DB = require('./db')(dbsettings);
     res.redirect("/index.html");
 });*/
 
+app.get('/home', function(req, res) {
+    res.sendfile(__dirname+'/public/app.html');
+});
+
 // For all routes `^/browse`. See [browse.js](./browse.html)
 require('./browse')(app);
 

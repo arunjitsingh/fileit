@@ -1,15 +1,13 @@
 var HASH = require('../lib/hashlib').sha1;
 
 module.exports = function(db) {
+    // console.log("USERS: ", db);
     if (!db) {
+        console.log("FATAL! DB not inited!");
         throw "DB not inited!";
     }
     
-    if (db.name !== 'fi-users') {
-        throw "User DB not selected";
-    }
     var userAuth = {};
-
     userAuth.exists = function(id, callback) {
         id = (typeof(id)==='string') ? id : null;
         if (!id) {
@@ -52,6 +50,7 @@ module.exports = function(db) {
                     password_sha: HASH(pw + salt),
                     name: info.name || id,
                     email: info.email || null,
+                    cdn: [],
                     shared: [],
                     servers: [],
                     friends: [],
@@ -104,12 +103,19 @@ module.exports = function(db) {
             callback({status:400, error:"Need username (`id`)"}, null);
             return;
         }
-        db.remove(id, function(err, dbres) {
+        db.get(id, function(err, doc) {
             if (err) {
-                callback({status:500, error:"User could not be deleted", detail:err}, null);
-            } else {
-                callback(null, dbres);
+                console.log("deleteUser/user doesn't exist");
+                callback({status:404, error:"User not found", detail:err}, null);
+                return;
             }
+            db.remove(id, doc._rev, function(err, dbres) {
+                if (err) {
+                    callback({status:500, error:"User could not be deleted", detail:err}, null);
+                } else {
+                    callback(null, dbres);
+                }
+            });
         });
     };
     

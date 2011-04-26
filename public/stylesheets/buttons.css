@@ -85,3 +85,33 @@ button[type=delete]:active {
   background: -moz-linear-gradient(-90deg,
       rgba(255, 0, 0, 0.8), rgba(255, 77, 77, 0.8));
 }
+button[type=special] {
+  background: rgba(0, 0, 222, 0.8);
+  color: #fff;
+  background: -webkit-gradient(linear, left top, left bottom,
+      from(rgba(44, 44, 255, 0.8)), to(rgba(0, 0, 200, 0.8)));
+  background: -moz-linear-gradient(-90deg,
+      rgba(44, 44, 255, 0.8), rgba(0, 0, 200, 0.8));
+}
+button[type=special]:hover {
+  background: -webkit-gradient(linear, left top, left bottom,
+      from(rgba(77, 77, 255, 0.8)), to(rgba(0, 0, 255, 0.8)));
+  background: -moz-linear-gradient(-90deg,
+      rgba(77, 77, 255, 0.8), rgba(0, 0, 255, 0.8));
+}
+button[type=special]:active {
+  background: -webkit-gradient(linear, left top, left bottom,
+      from(rgba(0, 0, 255, 0.8)), to(rgba(77, 77, 255, 0.8)));
+  background: -moz-linear-gradient(-90deg,
+      rgba(0, 0, 255, 0.8), rgba(77, 77, 255, 0.8));
+}
+button.disabled,
+button.disabled:hover,
+button.disabled:active {
+    cursor: default;
+    background: rgba(64, 64, 64, 0.8);
+    background: -webkit-gradient(linear, left top, left bottom,
+          from(rgba(128, 128, 128, 0.8)), to(rgba(64, 64, 64, 0.8)));
+      background: -moz-linear-gradient(-90deg,
+          rgba(128, 128, 128, 0.8), rgba(64, 64, 64, 0.8));
+}

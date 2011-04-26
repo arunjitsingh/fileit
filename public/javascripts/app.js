@@ -7,7 +7,7 @@
             || typeof(Class)==='undefined'  // OO, oo.js
             || typeof(_)==='undefined'      // Underscore, underscore.js
             || typeof(DATEJS)==='undefined' // date.js
-            || typeof(FI)==='undefined'     // FI, FI/core.js
+            || typeof(FI)==='undefined'     // FI, FI.js
         ) {
         alert("Application load failed. Try reloading");
         throw new Error("Application load failed");
@@ -192,15 +192,15 @@
     FI.APP.updateMain = function() {
         FI.APP.$main.animate({scrollLeft:FI.APP.$main.width()}, {duration: 250, queue: false});
     };
-    
+
     //TODO: put this as an event
     FI.APP.updateHash = function(id) {
         //FI.log("HASH", FI.APP.user.home, id);
         var uri = FI.pathJoin(USER.home.id, id);
         window.location.hash = uri;
     };
-    
-    
+   
+
     // Overlay control
     FI.APP.showOverlay = function(elt, options) {
         options = options || {};
@@ -234,7 +234,8 @@
         overlay.fadeOut();
     };
     /* *************** */
-    
+
+
     FI.APP.$ = $({});
     
     FI.APP.$body = $(document.body);
@@ -258,54 +259,43 @@
             $(".ajax-working").hide();
             //FI.APP.updateHash(options.url);
         });
-    FI.APP.$.messageQueue = [];    
-    FI.APP.$.updateMessages = function() {
+
+    var notifyDelay = 1000;
+
+    FI.APP.notify = function(message, type) {
         var ib = $("#info-bar");
-        ib.show();
-        var mq = FI.APP.$.messageQueue;
-        if (mq.length > 0) {
-            var obj;
-            if( (obj = mq.shift(1)) ) {
-                ib.fadeIn(2000, function() {
-                    if (obj.showError === true) {
-                        var errstring = err + ": ";
-                        errstring += obj.error;
-                        FI.log("Error", errstring);
-                        ib.html(errstring);
-                    } else if (obj.showInfo === true) {
-                        var infostring = "Success! : " + obj.info;
-                        FI.log("Info", infostring);
-                        ib.html(infostring);
-                    }
-                });
-                
-            } else {
-                ib.fadeOut(200);
+        var elt = FI.$new('div', {});
+        ib.addClass('visible');
+        elt.text(message);
+        elt.hide().fadeIn(notifyDelay);
+        ib.append(elt);
+        var iv = setInterval(function() {
+            elt.fadeOut(notifyDelay, function() {elt.remove();});
+            if (ib.children().length < 1) {
+                ib.removeClass('visible');
+                clearInterval(iv);
             }
-        }
+        }, notifyDelay*(type===FI.kError ? 4 : 2));
     };
+    
     FI.APP.$.bind({
         "error": function(evt, err, obj) {
             debug.error(err, obj);
             FI.APP.$body.removeClass("success").addClass("error");
             if (obj.showError === true) {
-                FI.APP.$.messageQueue.push(obj);
-            } else {
-                FI.APP.$body.removeClass("showinfo");
+                var errmsg = err+": "+obj.error;
+                FI.APP.notify(errmsg, FI.kError);
             }
-            FI.APP.$.updateMessages();
         },
         "success": function(evt, obj) {
             FI.APP.$body.removeClass("error").addClass("success");
             if (obj.showInfo === true) {
-                FI.APP.$.messageQueue.push(obj);
-            } else {
-                FI.APP.$body.removeClass("showinfo");
+                var infomsg = "Success! : "+obj.info;
+                FI.APP.notify(infomsg, FI.kSuccess);
             }
-            FI.APP.$.updateMessages();
         }
     });
-    
+
     // Authentication methods
     FI.APP.didAuthenticate = function(response, status, xhr) {
         if (response && response.ok) {
@@ -324,11 +314,12 @@
         }
     };
     FI.APP.didNotAuthenticate = function(xhr, status, error) {
+        FI.log("Tried to authenticate, but server returned error");
         if (xhr && xhr.responseText) FI.APP.doLogin(JSON.parse(xhr.responseText));
         else FI.APP.doLogin(xhr);
     };
     /* *************** */
-    
+
     // Log in and Log out
     FI.APP.doLogin = function(error) {
         var elt = $("#login").clone(); //not clone(true)
@@ -345,7 +336,7 @@
             FI.APP.authenticateUser(username, password);
         });
         FI.APP.showOverlay(elt, {cancel:function() {
-            window.location = "/signup.html";
+            window.location = "/";
         }});
     };
     
@@ -356,7 +347,8 @@
         });
     };
     /* *************** */
-    
+
+    /* OPENING A FILE */
     var MediaTag = {
         'audio': '<audio autoplay controls></audio>',
         'video': '<video autoplay controls></video>'
@@ -393,6 +385,8 @@
             cancel: function() {}
         });
     };
+    /* *************** */
+
     
     $(document).ready(function() {
         
@@ -414,14 +408,48 @@
         $("#settings").click(function() {
             if ($(this).hasClass('disabled')) return;
             var elt = $("#settings-bar").clone();
-            console.log(FI.APP.user);
+            var del = elt.find("#delete-account");
+            del.bind('click.first', function() {
+                if (del.hasClass('disabled')) return;
+                del.text("Are you sure?");
+                del.bind('click.final', function() {
+                    var options = FI.APP.ajaxOptions({
+                        url: '/user-del',
+                        type: DELETE,
+                        success: function() {
+                            window.location = '/';
+                        },
+                        error: function(xhr, status, error) {
+                            FI.APP.hideOverlay();
+                            var elt = $("#big-error").clone();
+                            elt.find(".the-error").text("Couldn't delete account");
+                            elt.find(".error-details")
+                            .text("Please contact support with this issue and your user ID.'"
+                                + error + "'");
+                            debug.error(xhr, status, error);
+                            FI.APP.showOverlay(elt, {cancel: function() {
+                                window.location.reload();
+                            }});
+                        }
+                    });
+                    $.ajax(options);
+                });
+            });
+            //console.log(FI.APP.user);
             elt.find('.user-name').text(FI.APP.user.name);
             elt.find("#logout").click(function() {
                 FI.APP.doLogout();
             });
             FI.APP.showOverlay(elt, {
-                cancel: function() {}
+                cancel: function() {
+                    del.unbind('click.final');
+                    del.text("Delete Account");
+                }
             });
+        });
+
+        $("#big-error button.cancel").live('click', function() {
+            window.location.reload();
         });
 
         FI.APP.authenticated(function(response, status) {

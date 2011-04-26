@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>FILE!IT</title>
+  <link rel="stylesheet" href="stylesheets/reset.css" media="all" type="text/css">
+  <link rel="stylesheet" href="stylesheets/global.css" media="all" type="text/css">
+  <link rel="stylesheet" href="stylesheets/app.css" media="all" type="text/css">
+</head>
+<body>
+  <!-- THE SIDEBAR -->
+  <div id="sidebar">
+    <img src="images/fi-64.png" height="64">
+    <ul id="app-controls" class="sidebar-controls">
+      <li class="button" id="home" title="Home Folder">
+        <img src="images/fi-home-2.png" height="64">
+      </li>
+      <li class="button disabled" id="shared" title="Files Shared With Me">
+        <img src="images/fi-shared-2.png" height="64">
+      </li>
+      <!-- <li class="button disabled" id="links" title="My Links">
+              <img src="images/fi-links-2.png" height="64">
+            </li> -->
+      <li class="button" id="settings" title="Preferences">
+        <img src="images/fi-settings.png" height="64">
+      </li>
+    </ul>
+    <hr class="spacer">
+    <ul id="file-controls" class="sidebar-controls">
+      <li class="button" id="newdir" title="Create New Folder">
+        <img src="images/fi-newdir.png" height="64">
+      </li>
+      <li class="button disabled" id="delete" title="Delete File/Folder">
+        <img src="images/fi-delete.png" height="64">
+      </li>
+      <li class="button disabled" id="rename" title="Rename File/Folder">
+        <img src="images/fi-rename.png" height="64">
+      </li>
+      <li class="button" id="upload" title="Upload to this Folder">
+        <img src="images/fi-upload.png" height="64">
+      </li>
+      <li class="button disabled" id="download" title="Download File">
+        <img src="images/fi-download.png" height="64">
+      </li>
+    </ul>
+  </div>
+  <div id="main" style="display:none">
+    <div id="browser-view" style="display:none">
+      <!-- THE MAIN BROWSER -->
+    </div>
+    <div id="shared-view" style="display:none">
+      <!-- THE SHARED LISTING -->
+      <div id="shared-list">
+        <ul class="list shared">
+          <!-- $(".shared-list-item")s go here -->
+        </ul>
+      </div>
+      <div id="shared-viewer">
+        <!-- Viewer for shared files -->
+      </div>
+    </div>
+    <div id="links-view" style="display:none">
+      <!-- THE LINKS LISTING -->
+    </div>
+  </div>
+  
+  <!-- THE INFO BAR -->
+  <div id="info-bar"></div>
+  
+  
+  <!-- OTHER ELEMENTS -->
+  <div id="overlay">
+    <span id="close-overlay" class="button cancel"></span>
+    <div id="overlay-container"></div>
+    <div class="ajax-working" style="display:none"><img src="images/loader.gif"></div>
+  </div>
+  
+  <!-- TEMPLATE ELEMENTS -->
+  <div id="template-elements" style="display:none">
+    
+    <!-- SHARED LIST ITEM -->
+    <li class="shared-list-item sli">
+      <span class="user"></span>
+      <span class="file"></span>
+    </li>
+    
+    <!-- LOGIN -->
+    <div id="login" class="dialog theme"><center>
+      <form action="/auth" method="POST">
+        <img id="fi-logo-big" src="images/fi-logo-d.png" alt="FILE!IT" height="256">
+        <h3>Log in to <span class="F-I">FILE<span class="F-I-ex">!</span>IT</span></h3>
+        <table>
+          <tr>
+            <td><input type="text" id="username" placeholder="Username" required></td>
+            <td><input type="password" id="password" placeholder="Password" required></td>
+            <td><button type="submit">Log In</button></td>
+          </tr>
+        </table>
+      </form>
+      <button type="button" class="cancel">Cancel</button>
+    </center></div>
+    
+    <!-- SETTINGS -->
+    <div id="settings-bar" class="dialog theme">
+      <h3><span class="user-name"></span></h3>
+      <hr class="spacer">
+      <div id="del-acct">
+        <h5>Delete Account</h5>
+        <p>Deleting an account will also delete all data associated with the account.
+        There can be no recovery after the operation begins (NO rollback). Please be
+        absolutely sure that you want to delete the account. (Currently, accounts cannot
+        be deleted)</p>
+        <button type="delete" id="delete-account" class="button">Delete Account</button>
+      </div>
+      <hr class="spacer">
+      <div>
+        <h5>Log out</h5>
+        <p>Logging out will finish the current session and take you back to the home page.
+        You will need to log in again to use the application. It is recommended you log out
+        when leaving a public computer</p>
+        <button type="delete" id="logout">Log Out</button>
+      </div>
+      <hr class="spacer">
+      <button type="button" class="cancel">Cancel</button>
+    </div>
+    
+    
+    <!-- FUNCTION BARS -->
+    <!-- UPLOAD BAR -->
+    <div id="upload-bar" class="dialog theme"><center>
+      <form action="" method="POST" id="upload-form">
+        <h3>Upload To: <span class="upload-to-dir file-name"></span></h3>
+        <hr class="spacer">
+        <table>
+          <tr>
+            <td><input type="file" name="file"></td>
+            <td><button type="submit">Upload</button></td>
+          </tr>
+        </table>
+      </form>
+      <button type="button" class="cancel">Cancel</button>
+    </center></div>
+    
+    <!-- NEW DIR -->
+    <div id="newdir-bar" class="dialog theme"><center>
+        <h3>Create a new folder in <span class="newdir-parent file-name"></span></h3>
+        <hr class="spacer">
+        <table>
+          <tr>
+            <td><span class="newdir-parent"></span></td>
+            <td><input type="text" name="dirname" placeholder="folder" required></td>
+            <td><button type="submit" class="ok">OK</button></td>
+          </tr>
+        </table>
+      <button type="button" class="cancel">Cancel</button>
+    </center></div>
+    
+    <!-- RENAME -->
+    <div id="rename-bar" class="dialog theme"><center>
+        <h3>Rename <span class="rename-file-id file-name"></span></h3>
+        <hr class="spacer">
+        <table>
+          <tr>
+            <td><input type="text" name="newname" placeholder="New name" required></td>
+            <td><button type="submit" class="ok">OK</button></td>
+          </tr>
+        </table>
+      <button type="button" class="cancel">Cancel</button>
+    </center></div>
+    
+    <!-- OPEN FILE -->
+    <div id="open-container">
+      <!-- File contents go here -->
+    </div>
+    
+    <!-- DELETE FILE -->
+    <div id="delete-bar" class="dialog theme"><center>
+      <h3>Delete <span class="file-name"></span></h3>
+      <hr class="spacer">
+      <button type="delete" class="ok">Delete</button>
+      <button type="button" class="cancel">Cancel</button>
+    </center></div>
+    
+    <!-- SHARE FILE -->
+    <div id="share-bar" class="dialog theme">
+      <center>
+        <h3>Share <span class="file-name"></span></h3>
+        <hr class="spacer">
+        <table>
+          <tr><td colspan="2"><input type="text" name="friendID" placeholder="Friend's ID"></td></tr>
+          <tr><td colspan="2"><input type="checkbox" name="cdnadd">Add to CDN?</td></tr>
+          <tr class="button-bar">
+            <td><button type="submit" class="ok">Share</button></td>
+            <td><button type="button" class="cancel">Cancel</button></td>
+          </tr>
+        </table>
+      </center>
+    </div>
+    
+    <!-- MAJOR ERROR REPORTING -->
+    <div id="big-error" class="dialog theme"><center>
+      <h3><span class="the-error"></span></h3>
+      <hr class="spacer">
+      <span class="error-details"></span>
+      <button type="cancel" class="cancel">OK</button>
+    <center></div>
+    
+    <!-- FILE DETAILS -->
+    <div id="details" class="file-details">
+      <center>
+        <span class="file-name"></span><br>
+        <img class="file-type" height="256">
+      </center>
+      <center><table>
+        <tr><td class="label">Size:</td><td class="file-size"></td></tr>
+        <tr><td class="label">Created:</td><td class="file-ctime"></td></tr>
+        <tr><td class="label">Modified:</td><td class="file-mtime"></td></tr>
+      </table></center>
+      <div id="buttons"><center>
+        <span class="button" id="open-file" title="View File"><img src="images/fi-open.png" height="64"></span>
+        <span class="button" id="download-file" title="Download File"><img src="images/fi-download.png" height="64"></span>
+        <span class="button" id="delete-file" title="Delete File"><img src="images/fi-delete.png" height="64"></span>
+        <span class="button" id="share-file" title="Share File"><img src="images/fi-share.png" height="64"></span>
+        <br>
+      </center></div>
+      <div class="cdn-info"><span id="cdn-check" class="button">Get CDN URL&rarr;</span><br><a target="_blank" id="cdn-result" class="disabled"></a></div>
+    </div>
+    
+    <!-- SHARE DETAILS -->
+    <div id="share-details" class="file-details">
+      <center>
+        <span class="file-name"></span><br>
+        <img class="file-type" height="256">
+      </center>
+      <center><table>
+        <tr><td class="label">Size:</td><td class="file-size"></td></tr>
+        <tr><td class="label">Created:</td><td class="file-ctime"></td></tr>
+        <tr><td class="label">Modified:</td><td class="file-mtime"></td></tr>
+      </table></center>
+      <div id="buttons"><center>
+        <span class="button" id="share-open-file" title="View File"><img src="images/fi-open.png" height="64"></span>
+        <span class="button" id="share-download-file" title="Download File"><img src="images/fi-download.png" height="64"></span>
+    </div>
+  </div>
+</div>
+  
+  <div id="homedata" style="display:none"></div>
+  <div id="hidden" style="display:none"></div>
+  
+  
+  <script src="javascripts/vendor/jquery.all.js"></script>
+  <script src="javascripts/vendor/underscore.js"></script>
+  <script src="javascripts/vendor/oo.js"></script>
+  <script src="javascripts/vendor/date.js"></script>
+  <script src="javascripts/vendor/debug.min.js"></script>
+  <script src="javascripts/compat.js"></script>
+  <script src="javascripts/plugins.js"></script>
+  <script src="javascripts/FI.js"></script>
+  <script src="javascripts/app.js"></script>
+  <script src="javascripts/browse.js"></script>
+  <script src="javascripts/share.js"></script>
+  
+</body>
+</html>

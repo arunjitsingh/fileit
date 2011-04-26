@@ -9,10 +9,7 @@
 <body class="theme">
   <div id="bodybg"></div>
   <div id="bodycontainer">
-    <div id="logo" class="left">
-      <img src="images/fi-logo-d.png" alt="FILE!IT Logo">
-    </div>
-    <div id="sign-up" class="right">
+    <div id="sign-up" class="left">
       <h2>Sign up</h2>
       <form action="/signup" method="POST">
         <table>
@@ -34,11 +31,11 @@
           </tr>
           <tr>
             <td></td>
-            <td><button type="submit">Sign up</button></td>
+            <td>When you're ready, <button type="submit">Sign up</button></td>
           </tr>
           <tr>
             <td></td>
-            <td>Have an account? <button type="button" class="cancel">Log In</button></td>
+            <td>Already have an account? <button type="special" class="cancel">Log In</button></td>
           </tr>
           <tr>
             <td></td>
@@ -51,6 +48,11 @@
         </table>
       </form>
     </div>
+    
+    <div id="logo" class="right">
+      <img src="images/fi-logo-d.png" alt="FILE!IT Logo">
+    </div>
+    
   </div>
   <footer>
     <span class="F-I">FILE<span class="F-I-ex">!</span>IT</span>, the <span class="F-I">F<span class="F-I-ex">!</span>I</span> logo and the <span class="F-I">F<span class="F-I-ex">!</span>I</span> application are copyright works.<br> &copy; 2011, Arunjit Singh. All rights reserved.
@@ -63,6 +65,8 @@ $(document).ready(function() {
   }).ajaxComplete(function() {
     $("#loader").hide();
   });
+  
+  var EMAILREGEX = /^[a-zA-Z][a-zA-Z0-9._]*@[a-zA-Z0-9][a-zA-Z0-9._\-]*[a-z]{2,3}$/;
   
   var $error = $("#error");
   var form = $("#sign-up form");
@@ -82,14 +86,34 @@ $(document).ready(function() {
     });
   form.find("button.cancel").click(function() {
     console.log(this);
-    window.location = "/#/";
+    window.location = "/home";
   });
   form.ajaxForm({
+    beforeSubmit: function() {
+      var ret = true;
+      form.find("input").each(function(i, elt) {
+        elt = $(elt);
+        var v = elt.val();
+        if (!v || v === '') {
+          elt.addClass(error);
+          $error.text("All fields are required!");
+          return ret = false;
+        }
+        if (elt.is("[type=email]")) {
+          ret = EMAILREGEX.test(v);
+          if (!ret) {
+            $error.text("Please enter a valid email address!");
+          }
+          return ret;
+        }
+      });
+      return ret;
+    },
     dataType: 'json',
     success: function(res) {
       if (res && res.ok) {
         console.log(res);
-        window.location = '/';
+        window.location = '/home';
       } else if (res && res.error) {
         $error.text(res.error);
       }

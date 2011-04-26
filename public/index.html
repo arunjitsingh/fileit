@@ -7,230 +7,69 @@
   <link rel="stylesheet" href="stylesheets/global.css" media="all" type="text/css">
   <link rel="stylesheet" href="stylesheets/index.css" media="all" type="text/css">
 </head>
-<body>
-  <!-- THE SIDEBAR -->
-  <div id="sidebar">
-    <img src="images/fi-64.png" height="64">
-    <ul id="app-controls" class="sidebar-controls">
-      <li class="button" id="home" title="Home Folder">
-        <img src="images/fi-home-2.png" height="64">
-      </li>
-      <li class="button disabled" id="shared" title="Files Shared With Me">
-        <img src="images/fi-shared-2.png" height="64">
-      </li>
-      <li class="button disabled" id="links" title="My Links">
-        <img src="images/fi-links-2.png" height="64">
-      </li>
-      <li class="button" id="settings" title="Preferences">
-        <img src="images/fi-settings.png" height="64">
-      </li>
-    </ul>
-    <ul id="file-controls" class="sidebar-controls">
-      <li class="button" id="newdir" title="Create New Folder">
-        <img src="images/fi-newdir.png" height="64">
-      </li>
-      <li class="button disabled" id="delete" title="Delete File/Folder">
-        <img src="images/fi-delete.png" height="64">
-      </li>
-      <li class="button disabled" id="rename" title="Rename File/Folder">
-        <img src="images/fi-rename.png" height="64">
-      </li>
-      <li class="button" id="upload" title="Upload to this Folder">
-        <img src="images/fi-upload.png" height="64">
-      </li>
-      <li class="button disabled" id="download" title="Download File">
-        <img src="images/fi-download.png" height="64">
-      </li>
-    </ul>
-  </div>
-  <div id="main" style="display:none">
-    <div id="browser-view" style="display:none">
-      <!-- THE MAIN BROWSER -->
-    </div>
-    <div id="shared-view" style="display:none">
-      <!-- THE SHARED LISTING -->
-      <div id="shared-list">
-        <ul class="list shared">
-          <!-- $(".shared-list-item")s go here -->
-        </ul>
-      </div>
-      <div id="shared-viewer">
-        <!-- Viewer for shared files -->
-      </div>
-    </div>
-    <div id="links-view" style="display:none">
-      <!-- THE LINKS LISTING -->
-    </div>
-  </div>
-  
-  <!-- THE INFO BAR -->
-  <div id="info-bar" style="display:none" class="hidden"></div>
-  
-  
-  <!-- OTHER ELEMENTS -->
-  <div id="overlay">
-    <span id="close-overlay" class="button cancel"></span>
-    <div id="overlay-container"></div>
-    <div class="ajax-working" style="display:none"><img src="images/loader.gif"></div>
-  </div>
-  
-  <!-- TEMPLATE ELEMENTS -->
-  <div id="template-elements" style="display:none">
-    
-    <!-- SHARED LIST ITEM -->
-    <li class="shared-list-item sli">
-      <span class="user"></span>
-      <span class="file"></span>
-    </li>
-    
-    <!-- LOGIN -->
-    <div id="login" class="dialog theme"><center>
-      <form action="/auth" method="POST">
-        <img id="fi-logo-big" src="images/fi-logo-d.png" alt="FILE!IT" height="256">
-        <h3>Log in to <span class="F-I">FILE<span class="F-I-ex">!</span>IT</span></h3>
-        <table>
-          <tr>
-            <td><input type="text" id="username" placeholder="Username" required></td>
-            <td><input type="password" id="password" placeholder="Password" required></td>
-            <td><button type="submit">Log In</button></td>
-          </tr>
-        </table>
-      </form>
-      <button type="button" class="cancel">Sign up</button>
-    </center></div>
-    
-    <!-- SETTINGS -->
-    <div id="settings-bar" class="dialog theme">
-      <h3><span class="user-name"></span></h3>
-      <button type="delete" id="logout">Log Out</button>
-      <button type="button" class="cancel">Cancel</button>
-    </div>
-    
-    
-    <!-- FUNCTION BARS -->
-    <!-- UPLOAD BAR -->
-    <div id="upload-bar" class="dialog theme"><center>
-      <form action="" method="POST" id="upload-form">
-        <h3>Upload To: <span class="upload-to-dir file-name"></span></h3>
-        <table>
-          <tr>
-            <td><input type="file" name="file"></td>
-            <td><button type="submit">Upload</button></td>
-          </tr>
-        </table>
-      </form>
-      <button type="button" class="cancel">Cancel</button>
-    </center></div>
-    
-    <!-- NEW DIR -->
-    <div id="newdir-bar" class="dialog theme"><center>
-        <h3>Create a new folder in <span class="newdir-parent file-name"></span></h3>
-        <table>
-          <tr>
-            <td><span class="newdir-parent"></span></td>
-            <td><input type="text" name="dirname" placeholder="folder" required></td>
-            <td><button type="submit" class="ok">OK</button></td>
-          </tr>
-        </table>
-      <button type="button" class="cancel">Cancel</button>
-    </center></div>
-    
-    <!-- RENAME -->
-    <div id="rename-bar" class="dialog theme"><center>
-        <h3>Rename <span class="rename-file-id file-name"></span></h3>
-        <table>
-          <tr>
-            <td><input type="text" name="newname" placeholder="New name" required></td>
-            <td><button type="submit" class="ok">OK</button></td>
-          </tr>
-        </table>
-      <button type="button" class="cancel">Cancel</button>
-    </center></div>
-    
-    <!-- OPEN FILE -->
-    <div id="open-container">
-      <!-- File contents go here -->
-    </div>
-    
-    <!-- DELETE FILE -->
-    <div id="delete-bar" class="dialog theme">
-      <center>
-        <h3>Delete <span class="file-name"></span></h3>
-        <button type="delete" class="ok">Delete</button>
-        <button type="button" class="cancel">Cancel</button>
-      </center>
-    </div>
-    
-    <!-- SHARE FILE -->
-    <div id="share-bar" class="dialog theme">
-      <center>
-        <h3>Share <span class="file-name"></span></h3>
-        <table>
-          <tr><td colspan="2"><input type="text" name="friendID" placeholder="Friend's ID"></td></tr>
-          <tr><td colspan="2"><input type="checkbox" name="cdnadd">Add to CDN?</td></tr>
-          <tr class="button-bar">
-            <td><button type="submit" class="ok">Share</button></td>
-            <td><button type="button" class="cancel">Cancel</button></td>
-          </tr>
-        </table>
-      </center>
-    </div>
-    
-    
-    <!-- FILE DETAILS -->
-    <div id="details" class="file-details">
-      <center>
-        <span class="file-name"></span><br>
-        <img class="file-type" height="256">
-      </center>
-      <center><table>
-        <tr><td class="label">Size:</td><td class="file-size"></td></tr>
-        <tr><td class="label">Created:</td><td class="file-ctime"></td></tr>
-        <tr><td class="label">Modified:</td><td class="file-mtime"></td></tr>
-      </table></center>
-      <div id="buttons"><center>
-        <span class="button" id="open-file" title="View File"><img src="images/fi-open.png" height="64"></span>
-        <span class="button" id="download-file" title="Download File"><img src="images/fi-download.png" height="64"></span>
-        <span class="button" id="delete-file" title="Delete File"><img src="images/fi-delete.png" height="64"></span>
-        <span class="button" id="share-file" title="Share File"><img src="images/fi-share.png" height="64"></span>
-        <br>
-      </center></div>
-      <div class="cdn-info"><span id="cdn-check" class="button">Get CDN URL&rarr;</span><br><a target="_blank" id="cdn-result" class="disabled"></a></div>
-    </div>
-    
-    <!-- SHARE DETAILS -->
-    <div id="share-details" class="file-details">
-      <center>
-        <span class="file-name"></span><br>
-        <img class="file-type" height="256">
-      </center>
-      <center><table>
-        <tr><td class="label">Size:</td><td class="file-size"></td></tr>
-        <tr><td class="label">Created:</td><td class="file-ctime"></td></tr>
-        <tr><td class="label">Modified:</td><td class="file-mtime"></td></tr>
-      </table></center>
-      <div id="buttons"><center>
-        <span class="button" id="share-open-file" title="View File"><img src="images/fi-open.png" height="64"></span>
-        <span class="button" id="share-download-file" title="Download File"><img src="images/fi-download.png" height="64"></span>
-    </div>
-  </div>
-</div>
-  
-  <div id="homedata" style="display:none"></div>
-  <div id="hidden" style="display:none"></div>
-  
-  
-  <script src="javascripts/vendor/jquery.all.js"></script>
-  <script src="javascripts/vendor/underscore.js"></script>
-  <script src="javascripts/vendor/oo.js"></script>
-  <script src="javascripts/vendor/date.js"></script>
-  <script src="javascripts/vendor/debug.min.js"></script>
-  <script src="javascripts/compat.js"></script>
-  <script src="javascripts/plugins.js"></script>
-  <script src="javascripts/FI.js"></script>
-  <script src="javascripts/app.js"></script>
-  <script src="javascripts/browse.js"></script>
-  <script src="javascripts/share.js"></script>
-  
-</body>
+<body><div id="bodycontainer">
+    <header class="">
+      <div class="left"><img src="images/fileit-logo.png" height="128" alt="FILE!IT Logo"></div>
+      <div class="left"><table cellpadding="50" cellspacing="50">
+        <tr>
+          <td>New User?</td>
+          <td>Have an account?</td>
+        </tr>
+        <tr>
+          <td><button id="signup" type="submit">Sign Up!</button></td>
+          <td><button id="login" type="special">Go to App&rarr;</button></td>
+        </tr>
+      </table></div>
+    <noscript class='error'>You need JavaScript to use this application!</noscript>
+  </header>
+  <hr class="spacer">
+    <section>
+    <h4>What is it?</h4>
+    <p>FILE!IT is a use-anywhere web application to browse, share and view files in an innovative new way. It leverages the best of current and upcoming web technologies, and is bound to standards.</p>
+    <p>Users interact with the application in a familiar domain–the web browser–which means it can be accessed from anywhere. The application features intuitive controls based on industry standards and human-interface guidelines.</p>
+    <p>The application aims to allow users access to their files stored anywhere. The user will be capable of configuring access points (providing they have the necessary privileges) and view file hierarchies for their storage servers.</p>
+    <p>Some front-end enhanced features include inline viewing of video, audio, images and text files.</p>
+    <p>More details <a href="/-/fi/FILE!IT%20Abstract.pdf">here</a>.</p>
+  </section>
+  <section id="demo-media">
+    <h4>See it in action</h4>
+    <p>
+      Click on the image to see a demo video
+    </p>
+    <img id="video-base" src="/images/demo-poster.png" width="960px" class="button">
+  </section>
+  <hr class="spacer">
+  <footer>
+    <span class="F-I">FILE<span class="F-I-ex">!</span>IT</span>, the <span class="F-I">F<span class="F-I-ex">!</span>I</span> logo and the <span class="F-I">F<span class="F-I-ex">!</span>I</span> application are copyright works.<br> &copy; 2011, Arunjit Singh. All rights reserved.
+  </footer>
+</div></body>
+<script src="/javascripts/vendor/jquery.all.js" type="text/javascript" charset="utf-8"></script>
+<script>
+  $("#signup").click(function() {window.location='/signup.html';});
+  $("#login").click(function() {window.location='/home';});
+  $("#video-base").click(function() {
+    var b = $(this);
+    var v = $('<video src="/-/fi/uploads/FI-DEMO-2.mov" width="960px" controls autoplay>');
+    b.replaceWith(v);
+  });
+</script>
 </html>
+<!-- 
+
+<div class="left">
+  <img src="images/fi-logo-d.png" height="128" alt="FILE!IT Logo">
+</div>
+<div class="right">
+  <table height="128">
+    <tr>
+      <td>New User?</td>
+      <td>Have an account?</td>
+    </tr>
+    <tr>
+      <td><button type="submit">Sign Up!</button></td>
+      <td><button type="button">Go to App&rarr;</button></td>
+    </tr>
+  </table>
+</div>
+
+ -->
