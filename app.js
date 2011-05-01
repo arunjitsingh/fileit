@@ -93,9 +93,13 @@ app._DB = require('./db')(dbsettings);
     res.redirect("/index.html");
 });*/
 
+// Special routes
 app.get('/home', function(req, res) {
     res.sendfile(__dirname+'/public/app.html');
 });
+
+// Route for CDN listing (useful for search engines)
+require('./robots')(app);
 
 // For all routes `^/browse`. See [browse.js](./browse.html)
 require('./browse')(app);
