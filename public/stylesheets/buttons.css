@@ -37,9 +37,9 @@ button:hover {
 }
 button:active {
   background: -webkit-gradient(linear, left top, left bottom,
-      from(rgba(44, 44, 44, 0.8)), to(rgba(77, 77, 77, 0.8)));
+      from(rgba(22, 22, 22, 0.8)), to(rgba(44, 44, 44, 0.8)));
   background: -moz-linear-gradient(-90deg,
-      rgba(44, 44, 44, 0.8), rgba(77, 77, 77, 0.8));
+      rgba(22, 22, 22, 0.8), rgba(44, 44, 44, 0.8));
 }
 
 button[type=submit] {
@@ -58,9 +58,9 @@ button[type=submit]:hover {
 }
 button[type=submit]:active {
   background: -webkit-gradient(linear, left top, left bottom,
-      from(rgba(0, 255, 0, 0.8)), to(rgba(77, 255, 77, 0.8)));
+      from(rgba(0, 200, 0, 0.8)), to(rgba(44, 255, 44, 0.8)));
   background: -moz-linear-gradient(-90deg,
-      rgba(0, 255, 0, 0.8), rgba(77, 255, 77, 0.8));
+      rgba(0, 200, 0, 0.8), rgba(44, 255, 44, 0.8));
 }
 button[type=cancel],
 button[type=delete] {
@@ -81,9 +81,9 @@ button[type=delete]:hover {
 button[type=cancel]:active,
 button[type=delete]:active {
   background: -webkit-gradient(linear, left top, left bottom,
-      from(rgba(255, 0, 0, 0.8)), to(rgba(255, 77, 77, 0.8)));
+      from(rgba(200, 0, 0, 0.8)), to(rgba(255, 44, 44, 0.8)));
   background: -moz-linear-gradient(-90deg,
-      rgba(255, 0, 0, 0.8), rgba(255, 77, 77, 0.8));
+      rgba(200, 0, 0, 0.8), rgba(255, 44, 44, 0.8));
 }
 button[type=special] {
   background: rgba(0, 0, 222, 0.8);
@@ -101,9 +101,9 @@ button[type=special]:hover {
 }
 button[type=special]:active {
   background: -webkit-gradient(linear, left top, left bottom,
-      from(rgba(0, 0, 255, 0.8)), to(rgba(77, 77, 255, 0.8)));
+      from(rgba(0, 0, 200, 0.8)), to(rgba(44, 44, 255, 0.8)));
   background: -moz-linear-gradient(-90deg,
-      rgba(0, 0, 255, 0.8), rgba(77, 77, 255, 0.8));
+      rgba(0, 0, 200, 0.8), rgba(44, 44, 255, 0.8));
 }
 button.disabled,
 button.disabled:hover,
