@@ -1,6 +1,6 @@
 // Module dependencies
 var express = require('express');
-
+console.log("using express v", express.version || express.VERSION);
 // HTTPS dependencies. Keys and Certificates for SSL. 
 // Currently, certificates are self signed and would
 // cause the browser to show a warning

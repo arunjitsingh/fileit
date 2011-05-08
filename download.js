@@ -9,7 +9,6 @@ var json  = JSON.stringify,
 module.exports = function(app) {
     var DOWNLOAD = '/download/:uri(*)';
     
-    
     // All requests to `/download` will be received here. This will send
     // a file specified by the `uri` to the client
     app.all(DOWNLOAD, function(request, response) {
@@ -23,28 +22,34 @@ module.exports = function(app) {
             return;
         }
         var filepath = path.join(app.userDir, user.id||user._id, uri);
-        fs.stat(filepath, function(err, stat) {
-            if (err) {
-                response.contentType('json');
-                response.send(json({error: "Error accessing file", where:uri}), 500);
+        path.exists(filepath, function(exists) {
+            if (!exists) {
+                response.send(json({error:"File not Found"}), 404);
                 return;
             }
-            if (stat.isDirectory()) {
-                response.contentType('json');
-                response.send(json({error: "Directories cannot be downloaded yet", where:uri}), 501);
-                return;
-            } else {
-                if (dl) {
-                    // Send the file as a download (will open "Download"/etc panels)
-                    console.log("Attaching file ", filepath);
-                    response.download(filepath);
-                } else {
-                    // Simply send the file like a static resource. Useful for `src`
-                    // attributes of HTML elements
-                    console.log("Sending file ", filepath);
-                    response.sendfile(filepath);
+            fs.stat(filepath, function(err, stat) {
+                if (err) {
+                    response.contentType('json');
+                    response.send(json({error: "Error accessing file", where:uri}), 500);
+                    return;
                 }
-            }
+                if (stat.isDirectory()) {
+                    response.contentType('json');
+                    response.send(json({error: "Directories cannot be downloaded yet", where:uri}), 501);
+                    return;
+                } else {
+                    if (dl) {
+                        // Send the file as a download (will open "Download"/etc panels)
+                        console.log("Attaching file ", filepath);
+                        response.download(filepath);
+                    } else {
+                        // Simply send the file like a static resource. Useful for `src`
+                        // attributes of HTML elements
+                        console.log("Sending file ", filepath);
+                        response.sendfile(filepath);
+                    }
+                }
+            });
         });
     });
 };
