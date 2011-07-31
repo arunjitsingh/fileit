@@ -72,12 +72,12 @@ hr.spacer {
     display: block;
     border: none;
     height: 2px;
-    background: -webkit-gradient( linear, left top, right top,
-        from(transparent), 
-        color-stop( 0.30, rgba(0,0,0,0.15) ),
-        color-stop( 0.50, rgba(0,0,0,0.30) ),
-        color-stop( 0.70, rgba(0,0,0,0.15) ),
-        to(transparent) );
+    background: -webkit-linear-gradient(left,
+                                        transparent, 
+                                        rgba(0,0,0,0.15) 30%,
+                                        rgba(0,0,0,0.30) 50%,
+                                        rgba(0,0,0,0.15) 70%,
+                                        transparent);
 }
 .left {
     float: left;
