@@ -23,7 +23,7 @@
         parse = JSON.parse;
 
     if (FI.APP) FI._APP = FI.APP;
-    FI.APP = $({VERSION:'0.1.0ß'});
+    FI.APP = $({VERSION:'0.2.0ß'});
     FI.APP.toString = function() {return "FI.APP";};
     
     FI.log("App init");
